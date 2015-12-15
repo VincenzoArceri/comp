@@ -1,5 +1,5 @@
-mod SIMPLE-BUILTINS is
- including SIMPLE-BASE .
+mod COMPETITION-BUILTINS is
+ including COMPETITION-BASE .
  eq 'notBool_(_`(_`)(#_(GeneratedFreshVar4:#Bool), .KList) ) = _`(_`)(#_(notBool_(GeneratedFreshVar4:#Bool )), .KList) .
  eq '_andBool_(_`(_`)(#_(GeneratedFreshVar5:#Bool), .KList) ,, _`(_`)(#_(GeneratedFreshVar6:#Bool), .KList) ) = _`(_`)(#_(_andBool_(GeneratedFreshVar5:#Bool , GeneratedFreshVar6:#Bool )), .KList) .
  eq '_xorBool_(_`(_`)(#_(GeneratedFreshVar7:#Bool), .KList) ,, _`(_`)(#_(GeneratedFreshVar8:#Bool), .KList) ) = _`(_`)(#_(_xorBool_(GeneratedFreshVar7:#Bool , GeneratedFreshVar8:#Bool )), .KList) .

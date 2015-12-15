@@ -8,81 +8,71 @@ context-free syntax
 context-free priorities
 {
     Int -> Exp {}
-    Bool -> Exp {}
-    String -> Exp {}
     Id -> Exp {}
-    "++" Exp -> Exp {cons("Exp1444Syn")}
+    Bool -> Exp {}
 } > {
-    Exp "[" InsertDzExps "]" -> Exp {cons("Exp1445Syn")}
-} > {
-    Exp "(" InsertDzExps ")" -> Exp {cons("Exp1446Syn")}
-    "-" Exp -> Exp {cons("Exp1447Syn")}
+    "-" Exp -> Exp {cons("Exp1442Syn")}
 } > { left:
-    Exp "*" Exp -> Exp {left, cons("Exp1450Syn")}
-    Exp "/" Exp -> Exp {left, cons("Exp1452Syn")}
-    Exp "%" Exp -> Exp {left, cons("Exp1453Syn")}
+    Exp "*" Exp -> Exp {left, cons("Exp1444Syn")}
+    Exp "/" Exp -> Exp {left, cons("Exp1445Syn")}
+    Exp "%" Exp -> Exp {left, cons("Exp1446Syn")}
 } > { left:
-    Exp "+" Exp -> Exp {left, cons("Exp1454Syn")}
-    Exp "-" Exp -> Exp {left, cons("Exp1455Syn")}
+    Exp "+" Exp -> Exp {left, cons("Exp1447Syn")}
+    Exp "-" Exp -> Exp {left, cons("Exp1448Syn")}
 } > { non-assoc:
-    Exp "<" Exp -> Exp {non-assoc, cons("Exp1456Syn")}
-    Exp "<=" Exp -> Exp {non-assoc, cons("Exp1457Syn")}
-    Exp ">" Exp -> Exp {non-assoc, cons("Exp1458Syn")}
-    Exp ">=" Exp -> Exp {non-assoc, cons("Exp1459Syn")}
-    Exp "==" Exp -> Exp {non-assoc, cons("Exp1460Syn")}
-    Exp "!=" Exp -> Exp {non-assoc, cons("Exp1462Syn")}
+    Exp "<" Exp -> Exp {non-assoc, cons("Exp1449Syn")}
+    Exp "<=" Exp -> Exp {non-assoc, cons("Exp1450Syn")}
+    Exp ">" Exp -> Exp {non-assoc, cons("Exp1452Syn")}
+    Exp ">=" Exp -> Exp {non-assoc, cons("Exp1453Syn")}
+    Exp "==" Exp -> Exp {non-assoc, cons("Exp1454Syn")}
+    Exp "!=" Exp -> Exp {non-assoc, cons("Exp1455Syn")}
 } > {
-    "!" Exp -> Exp {cons("Exp1463Syn")}
+    "not" Exp -> Exp {cons("Exp1456Syn")}
 } > { left:
-    Exp "&&" Exp -> Exp {left, cons("Exp1464Syn")}
-    Exp "||" Exp -> Exp {left, cons("Exp1465Syn")}
+    Exp "&&" Exp -> Exp {left, cons("Exp1457Syn")}
+    Exp "||" Exp -> Exp {left, cons("Exp1458Syn")}
 } > {
-    "spawn" Block -> Exp {cons("Exp1466Syn")}
+    "execute" Block -> Exp {cons("Exp1459Syn")}
 } > {
-    Exp "=" Exp -> Exp {right, cons("Exp1467Syn")}
+    Id "=" Exp -> Exp {right, cons("Exp1460Syn")}
 }
 
 context-free start-symbols
-DzString DzBool Stmts Ddecl String Int Stmt Float Bool Exps Ids Block Id Exp DzInt DzFloat K
+Val DzString DzBool Stmts Ddecl String Int KResult Stmt Float Bool Exps Ids Block Vals Id Exp DzInt DzFloat K
 context-free syntax
-    "rendezvous" InsertDzExp ";" -> Stmt {cons("Stmt1485Syn")}
-    "var" InsertDzExps ";" -> Ddecl {cons("Ddecl1442Syn")}
-    "sizeOf" "(" InsertDzExp ")" -> Exp {cons("Exp1448Syn")}
-    "main" -> Id {cons("Id1440Syn")}
-    Exp ";" -> Stmt {cons("Stmt1470Syn")}
+    "var" InsertDzExps ";" -> Ddecl {cons("Ddecl1440Syn")}
+    "lock" InsertDzInt ";" -> Stmt {cons("Stmt1470Syn")}
+    Exp ";" -> Stmt {cons("Stmt1464Syn")}
     DzInt -> Int {}
     "(" InsertDzExp ")" -> Exp {cons("Exp1Bracket")}
-    "release" InsertDzExp ";" -> Stmt {cons("Stmt1484Syn")}
-    "join" InsertDzExp ";" -> Stmt {cons("Stmt1482Syn")}
-    "read" "(" ")" -> Exp {cons("Exp1449Syn")}
+    Int -> Val {}
+    "read" "(" ")" -> Exp {cons("Exp1443Syn")}
+    {Val ","}* -> Vals {cons("Vals1ListSyn")}
+    "print" "(" InsertDzExp ")" ";" -> Stmt {cons("Stmt1469Syn")}
     DzBool -> Bool {}
     Stmt -> Stmts {}
     {Exp ","}* -> Exps {cons("Exps1ListSyn")}
-    "print" "(" InsertDzExps ")" ";" -> Stmt {cons("Stmt1478Syn")}
     DzFloat -> Float {}
-    "return" InsertDzExp ";" -> Stmt {cons("Stmt1476Syn")}
-    "return" ";" -> Stmt {cons("Stmt1477Syn")}
-    "if" "(" InsertDzExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1472Syn")}
-    "for" "(" InsertDzStmts InsertDzExp ";" InsertDzExp ")" Block -> Stmt {cons("Stmt1475Syn")}
+    "return" InsertDzExp ";" -> Stmt {cons("Stmt1468Syn")}
+    "unlock" InsertDzInt ";" -> Stmt {cons("Stmt1472Syn")}
+    "if" "(" InsertDzExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1465Syn")}
     Block -> Stmt {}
+    Bool -> Val {}
     DzString -> String {}
-    "{" InsertDzStmts "}" -> Block {cons("Block1469Syn")}
-    "while" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1474Syn")}
-    "{" "}" -> Block {cons("Block1468Syn")}
-    "acquire" InsertDzExp ";" -> Stmt {cons("Stmt1483Syn")}
+    "{" InsertDzStmts "}" -> Block {cons("Block1463Syn")}
+    Val -> KResult {}
+    "while" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1467Syn")}
+    "{" "}" -> Block {cons("Block1462Syn")}
     Ddecl -> Stmt {}
-    "function" InsertDzId "(" InsertDzIds ")" Block -> Ddecl {cons("Ddecl1443Syn")}
-    "try" InsertDzBlock "catch" "(" InsertDzId ")" Block -> Stmt {cons("Stmt1479Syn")}
-    Stmts Stmts -> Stmts {right, cons("Stmts1486Syn")}
-    "throw" InsertDzExp ";" -> Stmt {cons("Stmt1480Syn")}
-    "if" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1473Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1473Syn")}
+    Val -> Exp {}
+    "if" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1466Syn")}
     {Id ","}* -> Ids {cons("Ids1ListSyn")}
     Stmts -> InsertDzStmts
     Exps -> InsertDzExps
     Block -> InsertDzBlock
-    Ids -> InsertDzIds
-    Id -> InsertDzId
     Exp -> InsertDzExp
+    Int -> InsertDzInt
 
 
     DzDzString        -> DzString    {cons("DzString1Const")}
@@ -95,6 +85,7 @@ context-free syntax
 
 %% start symbols subsorts
     KItem        -> K
+    Val        -> K
     DzString        -> K
     DzBool        -> K
     Stmts        -> K
@@ -114,26 +105,18 @@ lexical syntax
     "true" -> DzDzBool
 
 
-    "sizeOf" -> IdDz {reject}
-    "release" -> IdDz {reject}
-    "for" -> IdDz {reject}
-    "main" -> IdDz {reject}
     "while" -> IdDz {reject}
-    "acquire" -> IdDz {reject}
+    "not" -> IdDz {reject}
     "else" -> IdDz {reject}
-    "function" -> IdDz {reject}
-    "rendezvous" -> IdDz {reject}
-    "catch" -> IdDz {reject}
-    "join" -> IdDz {reject}
+    "lock" -> IdDz {reject}
     "if" -> IdDz {reject}
     "read" -> IdDz {reject}
+    "unlock" -> IdDz {reject}
     "var" -> IdDz {reject}
     "false" -> IdDz {reject}
+    "execute" -> IdDz {reject}
     "print" -> IdDz {reject}
-    "spawn" -> IdDz {reject}
-    "throw" -> IdDz {reject}
     "true" -> IdDz {reject}
-    "try" -> IdDz {reject}
     "return" -> IdDz {reject}
 
 lexical restrictions
@@ -148,24 +131,14 @@ lexical syntax
     "&&" -> DzStringDz {reject}
     "||" -> DzStringDz {reject}
     "<=" -> DzStringDz {reject}
-    "sizeOf" -> DzStringDz {reject}
-    "release" -> DzStringDz {reject}
-    "for" -> DzStringDz {reject}
-    "main" -> DzStringDz {reject}
     "while" -> DzStringDz {reject}
-    "acquire" -> DzStringDz {reject}
+    "not" -> DzStringDz {reject}
     "else" -> DzStringDz {reject}
-    "function" -> DzStringDz {reject}
-    "rendezvous" -> DzStringDz {reject}
-    "[" -> DzStringDz {reject}
-    "catch" -> DzStringDz {reject}
-    "join" -> DzStringDz {reject}
-    "]" -> DzStringDz {reject}
+    "lock" -> DzStringDz {reject}
     "if" -> DzStringDz {reject}
-    "++" -> DzStringDz {reject}
     "==" -> DzStringDz {reject}
-    "!" -> DzStringDz {reject}
     "read" -> DzStringDz {reject}
+    "unlock" -> DzStringDz {reject}
     "%" -> DzStringDz {reject}
     "var" -> DzStringDz {reject}
     "false" -> DzStringDz {reject}
@@ -175,12 +148,10 @@ lexical syntax
     "+" -> DzStringDz {reject}
     "," -> DzStringDz {reject}
     "-" -> DzStringDz {reject}
+    "execute" -> DzStringDz {reject}
     "/" -> DzStringDz {reject}
     "print" -> DzStringDz {reject}
-    "spawn" -> DzStringDz {reject}
-    "throw" -> DzStringDz {reject}
     "true" -> DzStringDz {reject}
-    "try" -> DzStringDz {reject}
     ";" -> DzStringDz {reject}
     "{" -> DzStringDz {reject}
     "<" -> DzStringDz {reject}
@@ -193,24 +164,14 @@ lexical syntax
     "&&" -> IdDz {reject}
     "||" -> IdDz {reject}
     "<=" -> IdDz {reject}
-    "sizeOf" -> IdDz {reject}
-    "release" -> IdDz {reject}
-    "for" -> IdDz {reject}
-    "main" -> IdDz {reject}
     "while" -> IdDz {reject}
-    "acquire" -> IdDz {reject}
+    "not" -> IdDz {reject}
     "else" -> IdDz {reject}
-    "function" -> IdDz {reject}
-    "rendezvous" -> IdDz {reject}
-    "[" -> IdDz {reject}
-    "catch" -> IdDz {reject}
-    "join" -> IdDz {reject}
-    "]" -> IdDz {reject}
+    "lock" -> IdDz {reject}
     "if" -> IdDz {reject}
-    "++" -> IdDz {reject}
     "==" -> IdDz {reject}
-    "!" -> IdDz {reject}
     "read" -> IdDz {reject}
+    "unlock" -> IdDz {reject}
     "%" -> IdDz {reject}
     "var" -> IdDz {reject}
     "false" -> IdDz {reject}
@@ -220,12 +181,10 @@ lexical syntax
     "+" -> IdDz {reject}
     "," -> IdDz {reject}
     "-" -> IdDz {reject}
+    "execute" -> IdDz {reject}
     "/" -> IdDz {reject}
     "print" -> IdDz {reject}
-    "spawn" -> IdDz {reject}
-    "throw" -> IdDz {reject}
     "true" -> IdDz {reject}
-    "try" -> IdDz {reject}
     ";" -> IdDz {reject}
     "{" -> IdDz {reject}
     "<" -> IdDz {reject}
@@ -238,24 +197,14 @@ lexical syntax
     "&&" -> DzIntDz {reject}
     "||" -> DzIntDz {reject}
     "<=" -> DzIntDz {reject}
-    "sizeOf" -> DzIntDz {reject}
-    "release" -> DzIntDz {reject}
-    "for" -> DzIntDz {reject}
-    "main" -> DzIntDz {reject}
     "while" -> DzIntDz {reject}
-    "acquire" -> DzIntDz {reject}
+    "not" -> DzIntDz {reject}
     "else" -> DzIntDz {reject}
-    "function" -> DzIntDz {reject}
-    "rendezvous" -> DzIntDz {reject}
-    "[" -> DzIntDz {reject}
-    "catch" -> DzIntDz {reject}
-    "join" -> DzIntDz {reject}
-    "]" -> DzIntDz {reject}
+    "lock" -> DzIntDz {reject}
     "if" -> DzIntDz {reject}
-    "++" -> DzIntDz {reject}
     "==" -> DzIntDz {reject}
-    "!" -> DzIntDz {reject}
     "read" -> DzIntDz {reject}
+    "unlock" -> DzIntDz {reject}
     "%" -> DzIntDz {reject}
     "var" -> DzIntDz {reject}
     "false" -> DzIntDz {reject}
@@ -265,12 +214,10 @@ lexical syntax
     "+" -> DzIntDz {reject}
     "," -> DzIntDz {reject}
     "-" -> DzIntDz {reject}
+    "execute" -> DzIntDz {reject}
     "/" -> DzIntDz {reject}
     "print" -> DzIntDz {reject}
-    "spawn" -> DzIntDz {reject}
-    "throw" -> DzIntDz {reject}
     "true" -> DzIntDz {reject}
-    "try" -> DzIntDz {reject}
     ";" -> DzIntDz {reject}
     "{" -> DzIntDz {reject}
     "<" -> DzIntDz {reject}
@@ -283,24 +230,14 @@ lexical syntax
     "&&" -> DzFloatDz {reject}
     "||" -> DzFloatDz {reject}
     "<=" -> DzFloatDz {reject}
-    "sizeOf" -> DzFloatDz {reject}
-    "release" -> DzFloatDz {reject}
-    "for" -> DzFloatDz {reject}
-    "main" -> DzFloatDz {reject}
     "while" -> DzFloatDz {reject}
-    "acquire" -> DzFloatDz {reject}
+    "not" -> DzFloatDz {reject}
     "else" -> DzFloatDz {reject}
-    "function" -> DzFloatDz {reject}
-    "rendezvous" -> DzFloatDz {reject}
-    "[" -> DzFloatDz {reject}
-    "catch" -> DzFloatDz {reject}
-    "join" -> DzFloatDz {reject}
-    "]" -> DzFloatDz {reject}
+    "lock" -> DzFloatDz {reject}
     "if" -> DzFloatDz {reject}
-    "++" -> DzFloatDz {reject}
     "==" -> DzFloatDz {reject}
-    "!" -> DzFloatDz {reject}
     "read" -> DzFloatDz {reject}
+    "unlock" -> DzFloatDz {reject}
     "%" -> DzFloatDz {reject}
     "var" -> DzFloatDz {reject}
     "false" -> DzFloatDz {reject}
@@ -310,12 +247,10 @@ lexical syntax
     "+" -> DzFloatDz {reject}
     "," -> DzFloatDz {reject}
     "-" -> DzFloatDz {reject}
+    "execute" -> DzFloatDz {reject}
     "/" -> DzFloatDz {reject}
     "print" -> DzFloatDz {reject}
-    "spawn" -> DzFloatDz {reject}
-    "throw" -> DzFloatDz {reject}
     "true" -> DzFloatDz {reject}
-    "try" -> DzFloatDz {reject}
     ";" -> DzFloatDz {reject}
     "{" -> DzFloatDz {reject}
     "<" -> DzFloatDz {reject}

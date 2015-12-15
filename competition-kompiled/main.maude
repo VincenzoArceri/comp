@@ -1,0 +1,8 @@
+load "/Users/Vinci/k-3.4/lib/maude/lib/k-prelude"
+load "base.maude"
+load "builtins.maude"
+mod COMPETITION is 
+  including COMPETITION-BASE .
+  including COMPETITION-BUILTINS .
+eq mainModule = 'COMPETITION .
+endm

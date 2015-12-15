@@ -1,8 +1,0 @@
-load "/Users/Vinci/k-3.4/lib/maude/lib/k-prelude"
-load "base.maude"
-load "builtins.maude"
-mod SIMPLE is 
-  including SIMPLE-BASE .
-  including SIMPLE-BUILTINS .
-eq mainModule = 'SIMPLE .
-endm
