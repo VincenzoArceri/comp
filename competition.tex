@@ -1,0 +1,165 @@
+\nonstopmode
+\PassOptionsToPackage{pdftex,usenames,dvipsnames,svgnames,x11names}{xcolor}
+\PassOptionsToPackage{pdftex}{hyperref}
+\documentclass{article}
+\usepackage[poster,style=bubble]{k}
+\title{COMPETITION}
+\begin{document}
+\begin{kdefinition}
+\maketitle
+\begin{module}{\moduleName{COMPETITION-SYN}}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Decl}}}\syntax{{}\terminal{var}{{\nonTerminal{\sort{Ids}}}}\terminal{;}}{}\syntaxCont{{}\terminal{mutex}{{\nonTerminal{\sort{Ints}}}}\terminal{;}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Exp}}}\syntax{{\nonTerminal{\sort{Int}}}}{}\syntaxCont{{\nonTerminal{\sort{Id}}}}{}\syntaxCont{{\nonTerminal{\sort{Bool}}}}{}\syntaxCont{({{\nonTerminal{\sort{Exp}}}})}{\kattribute{bracket}}\syntaxCont{{}\terminal{-}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{}\terminal{read}()}{}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{*}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{/}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{\%}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{+}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{-}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{<}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{<=}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{>}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{>=}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{==}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{!=}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{}\terminal{not}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{\&\&}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}(1)}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{||}{{\nonTerminal{\sort{Exp}}}}}{\kattribute{strict}(1)}\syntaxCont{{}\terminal{execute}{{\nonTerminal{\sort{Block}}}}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Ids}}}\syntax{List\{{\nonTerminal{\sort{Id}}}, \mbox{``},\mbox{''}\}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Exps}}}\syntax{List\{{\nonTerminal{\sort{Exp}}}, \mbox{``},\mbox{''}\}}{\kattribute{strict}}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Ints}}}\syntax{List\{{\nonTerminal{\sort{Int}}}, \mbox{``},\mbox{''}\}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Block}}}\syntax{\{\}}{}\syntaxCont{\{{{\nonTerminal{\sort{Stmts}}}}\}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Stmt}}}\syntax{{\nonTerminal{\sort{Decl}}}}{}\syntaxCont{{\nonTerminal{\sort{Block}}}}{}\syntaxCont{{{\nonTerminal{\sort{Exp}}}}\terminal{;}}{\kattribute{strict}}\syntaxCont{{{\nonTerminal{\sort{Id}}}}\terminal{=}{{\nonTerminal{\sort{Exp}}}}\terminal{;}}{\kattribute{strict}(2)}\syntaxCont{{}\terminal{if}({{\nonTerminal{\sort{Exp}}}}){{\nonTerminal{\sort{Block}}}}\terminal{else}{{\nonTerminal{\sort{Block}}}}}{\kattribute{avoid}, \kattribute{strict}(1)}\syntaxCont{{}\terminal{if}({{\nonTerminal{\sort{Exp}}}}){{\nonTerminal{\sort{Block}}}}}{}\syntaxCont{{}\terminal{while}({{\nonTerminal{\sort{Exp}}}}){{\nonTerminal{\sort{Block}}}}}{}\syntaxCont{{}\terminal{return}{{\nonTerminal{\sort{Exp}}}}\terminal{;}}{\kattribute{strict}}\syntaxCont{{}\terminal{print}({{\nonTerminal{\sort{Exp}}}}){}\terminal{;}}{\kattribute{strict}}\syntaxCont{{}\terminal{lock}{{\nonTerminal{\sort{Int}}}}\terminal{;}}{\kattribute{strict}}\syntaxCont{{}\terminal{unlock}{{\nonTerminal{\sort{Int}}}}\terminal{;}}{\kattribute{strict}}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Stmts}}}\syntax{{\nonTerminal{\sort{Stmt}}}}{}\syntaxCont{{{\nonTerminal{\sort{Stmts}}}}\mathrel{}{{\nonTerminal{\sort{Stmts}}}}}{}
+\end{syntaxBlock}
+\krule{
+\reduce{{}\terminal{if}({\variable[K]{E}{}}){\variable[K]{S}{}}}{{}\terminal{if}({\variable[K]{E}{}}){\variable[K]{S}{}}\terminal{else}{\{\}}}}{}{}{\kattribute{macro}}{}
+\end{module}
+\begin{module}{\moduleName{COMPETITION}}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Val}}}\syntax{{\nonTerminal{\sort{Int}}}}{}\syntaxCont{{\nonTerminal{\sort{Bool}}}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Vals}}}\syntax{List\{{\nonTerminal{\sort{Val}}}, \mbox{``},\mbox{''}\}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{Exp}}}\syntax{{\nonTerminal{\sort{Val}}}}{}
+\end{syntaxBlock}
+
+\begin{syntaxBlock}{\nonTerminal{\sort{KResult}}}\syntax{{\nonTerminal{\sort{Val}}}}{}
+\end{syntaxBlock}
+\kconfig{\kall[red]{T}{\kall[orange]{threads}{\kall[yellow]{thread*}{\kall[green]{k}{\variable[Stmts]{\$PGM}{user}}
+\mathrel{}\kall[violet]{env}{\dotCt{Map}}
+\mathrel{}\kall[black]{holds}{\dotCt{Set}}
+\mathrel{}\kall[pink]{id}{\constant[\#Int]{0}}
+}
+}
+\mathrel{}\kall[pink]{genv}{\dotCt{Map}}
+\mathrel{}\kall[white]{store}{\dotCt{Map}}
+\mathrel{}\kall{streams}{\kall[magenta]{in}{\dotCt{List}}
+\mathrel{}\kall[brown]{out}{\dotCt{List}}
+}
+\mathrel{}\kall{mutex}{\dotCt{Map}}
+}
+}
+\krule{
+\reduce{{}\terminal{not}{\variable[Bool]{T}{user}}}{\neg_{\scriptstyle\it Bool}{\left({\variable[Bool]{T}{}}\right)}}}{}{}{}{}
+\krule{
+\reduce{{\constant[\#Bool]{true}}\terminal{\&\&}{\variable[K]{E}{}}}{\variable[K]{E}{}}}{}{}{}{}
+\krule{
+\reduce{{\constant[\#Bool]{false}}\terminal{\&\&}{\AnyVar[K]{}}}{\constant[\#Bool]{false}}}{}{}{}{}
+\krule{
+\reduce{{\constant[\#Bool]{true}}\terminal{||}{\AnyVar[K]{}}}{\constant[\#Bool]{true}}}{}{}{}{}
+\krule{
+\reduce{{\constant[\#Bool]{false}}\terminal{||}{\variable[K]{E}{}}}{\variable[K]{E}{}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{+}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{+_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{-}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{-_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{*}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{\ast_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{/}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{\div_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{{\variable[K]{I2}{}}\mathrel{{=}{/}{=}_{\scriptstyle\it Int}}{\constant[\#Int]{0}}}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{\%}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{\%_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{{\variable[K]{I2}{}}\mathrel{{=}{/}{=}_{\scriptstyle\it Int}}{\constant[\#Int]{0}}}{}{}{}
+\krule{
+\reduce{{}\terminal{-}{\variable[K]{I}{}}}{{\constant[\#Int]{0}}\mathrel{-_{\scriptstyle\it Int}}{\variable[K]{I}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{<}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{<_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{<=}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{\leq_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{>}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{>_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[K]{I1}{}}\terminal{>=}{\variable[K]{I2}{}}}{{\variable[K]{I1}{}}\mathrel{\geq_{\scriptstyle\it Int}}{\variable[K]{I2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[Val]{V1}{user}}\terminal{==}{\variable[Val]{V2}{user}}}{{\variable[Val]{V1}{}}\mathrel{=_K}{\variable[Val]{V2}{}}}}{}{}{}{}
+\krule{
+\reduce{{\variable[Val]{V1}{user}}\terminal{!=}{\variable[Val]{V2}{user}}}{{\variable[Val]{V1}{}}\mathrel{\neq_K}{\variable[Val]{V2}{}}}}{}{}{}{}
+\krule{
+\reduce{{}\terminal{if}({\constant[\#Bool]{true}}){\variable[K]{S}{}}\terminal{else}{\AnyVar[K]{}}}{\variable[K]{S}{}}}{}{}{}{}
+\krule{
+\reduce{{}\terminal{if}({\constant[\#Bool]{false}}){\AnyVar[K]{}}\terminal{else}{\variable[K]{S}{}}}{\variable[K]{S}{}}}{}{}{}{}
+\krule{
+\reduce{{}\terminal{while}({\variable[K]{E}{}}){\variable[K]{S}{}}}{{}\terminal{if}({\variable[K]{E}{}}){\{{{\variable[K]{S}{}}\mathrel{}{{}\terminal{while}({\variable[K]{E}{}}){\variable[K]{S}{}}}}\}}}}{}{}{\kattribute{structural}}{}
+\krule{
+\kprefix[green]{k}{\reduce{{}\terminal{read}()}{\variable[Int]{I}{}}}
+\mathrel{}\kprefix[magenta]{in}{\reduce{\variable[Int]{I}{user}}{\dotCt{List}}}
+}{}{}{\kattribute{read}}{}
+\krule{
+\kprefix[green]{k}{\reduce{{}\terminal{print}({\variable[Int]{I}{user}}){}\terminal{;}}{\variable[Int]{I}{}}}
+\mathrel{}\ksuffix[brown]{out}{\reduce{\dotCt{List}}{\variable[Int]{I}{}}}
+}{}{}{\kattribute{print}}{}
+\krule{
+\reduce{{\AnyVar[Val]{user}}\terminal{;}}{\dotCt{K}}}{}{}{}{}
+\krule{
+\kprefix[green]{k}{\reduce{{}\terminal{lock}{\variable[Int]{I}{user}}\terminal{;}}{{\variable[Int]{I}{}}\terminal{;}}}
+\mathrel{}\kall[black]{holds}{\reduce{\variable[Set]{Holds}{user}}{\variable[Set]{Holds}{}\mathrel{}\variable[Int]{I}{}}}
+\mathrel{}\kmiddle{mutex}{\variable[Int]{I}{}\mapsto\reduce{\constant[\#Int]{1}}{\constant[\#Int]{0}}}
+}{\neg_{\scriptstyle\it Bool}{\left({{\variable[Int]{I}{}}\terminal{in}{\variable[Set]{Holds}{}}}\right)}}{}{}{}
+\krule{
+\kprefix[green]{k}{\reduce{{}\terminal{unlock}{\variable[Int]{I}{user}}\terminal{;}}{{\variable[Int]{I}{}}\terminal{;}}}
+\mathrel{}\kall[black]{holds}{\reduce{\variable[Set]{Holds}{user}}{{\variable[Set]{Holds}{}}-_{\it Set}{\variable[Int]{I}{}}}}
+\mathrel{}\kmiddle{mutex}{\variable[Int]{I}{}\mapsto\reduce{\constant[\#Int]{0}}{\constant[\#Int]{1}}}
+}{\left({{\variable[Int]{I}{}}\terminal{in}{\variable[Set]{Holds}{}}}\right)}{}{}{}
+\krule{
+\kprefix[green]{k}{\reduce{\variable[Id]{X}{user}}{\variable[Int]{I}{user}}}
+\mathrel{}\kmiddle[violet]{env}{\variable[Id]{X}{}\mapsto\variable[K]{L}{}}
+\mathrel{}\kmiddle[white]{store}{\variable[K]{L}{}\mapsto\variable[Int]{I}{user}}
+}{}{}{}{}
+\krule{
+\kmiddle[yellow]{thread}{\kprefix[green]{k}{\reduce{{}\terminal{execute}{\variable[Block]{S}{user}}}{\variable[Int]{T}{user}}}
+\mathrel{}\kall[violet]{env}{\variable[Map]{Env}{user}}
+}
+\mathrel{}\reduce{\dotCt{Bag}}{\kmiddle[yellow]{thread}{\kall[green]{k}{\variable[Block]{S}{}}
+\mathrel{}\kall[violet]{env}{\variable[Map]{Env}{user}}
+\mathrel{}\kall[pink]{id}{\variable[Int]{T}{}}
+}
+}}{{}\terminal{fresh}({\variable[Int]{T}{user}})}{}{}{}
+\krule{
+\kprefix[green]{k}{{}\terminal{mutex}{\reduce{{\variable[Int]{I}{user}}\mathpunct{\terminalNoSpace{,}}{\variable[Ints]{I1}{user}}}{\variable[Ints]{I1}{}}}\terminal{;}}
+\mathrel{}\kall{mutex}{\reduce{\variable[Map]{{\mu}tex}{user}}{{\variable[Map]{{\mu}tex}{}}[{\constant[\#Int]{1}}\terminal{/}{\variable[Int]{I}{}}]}}
+}{}{}{}{}
+\krule{
+\reduce{{}\terminal{mutex}{\dotCt{Ints}}\terminal{;}}{\dotCt{K}}}{}{}{}{}
+\krule{
+\kprefix[green]{k}{{}\terminal{var}{\reduce{{\variable[Id]{X}{user}}\mathpunct{\terminalNoSpace{,}}{\variable[Ids]{X1}{user}}}{\variable[Ids]{X1}{}}}\terminal{;}}
+\mathrel{}\kall[violet]{env}{\reduce{\variable[Map]{{\rho}}{user}}{{\variable[Map]{{\rho}}{}}[{\variable[Int]{L}{user}}\terminal{/}{\variable[Id]{X}{}}]}}
+\mathrel{}\kall[white]{store}{\reduce{\variable[Map]{{\delta}}{user}}{{\variable[Map]{{\delta}}{}}[{\constant[\#Int]{0}}\terminal{/}{\variable[Int]{L}{}}]}}
+}{{}\terminal{fresh}({\variable[Int]{L}{user}})}{}{}{}
+\krule{
+\kprefix[green]{k}{\reduce{{\variable[Id]{X}{user}}\terminal{=}{\variable[Int]{I}{user}}\terminal{;}}{{\variable[Int]{I}{}}\terminal{;}}}
+\mathrel{}\kmiddle[violet]{env}{\variable[Id]{X}{}\mapsto\variable[Int]{N}{user}}
+\mathrel{}\ksuffix[white]{store}{\variable[Int]{N}{}\mapsto\reduce{\AnyVar[K]{}}{\variable[Int]{I}{}}}
+}{}{}{}{}
+\krule{
+\reduce{{\variable[Val]{V}{user}}\terminal{;}}{\dotCt{K}}}{}{}{\kattribute{structural}}{}
+\krule{
+\reduce{{}\terminal{var}{\dotCt{Ids}}\terminal{;}}{\dotCt{K}}}{}{}{\kattribute{structural}}{}
+\krule{
+\reduce{{\variable[Stmts]{S1}{user}}\mathrel{}{\variable[Stmts]{S2}{user}}}{\variable[Stmts]{S1}{}\kra\variable[Stmts]{S2}{}}}{}{}{\kattribute{structural}}{}
+\krule{
+\reduce{\{{\variable[Stmts]{S}{user}}\}}{\variable[Stmts]{S}{}}}{}{}{}{}
+\end{module}
+\end{kdefinition}
+\end{document}
