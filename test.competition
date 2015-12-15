@@ -1,0 +1,19 @@
+mutex 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+var x, y;
+
+lock 1;
+unlock 1;
+lock 2;
+lock 3;
+lock 4;
+unlock 4;
+lock 5;
+unlock 5;
+lock 6;
+unlock 6;
+lock 7;
+unlock 7;
+lock 8;
+unlock 8;
+lock 9;
+unlock 10;
