@@ -22,8 +22,8 @@ module COMPETITION-SYN
                | Exp "!=" Exp            [strict, non-assoc]
                > "not" Exp               [strict]
                > left:
-                 Exp "&&" Exp            [strict(1), left]
-               | Exp "||" Exp            [strict(1), left]
+                 Exp "and" Exp            [strict(1), left]
+               | Exp "or" Exp            [strict(1), left]
                > "execute" Block							
                //> Id "=" Exp            [strict(2), right]
 
@@ -43,7 +43,6 @@ module COMPETITION-SYN
                 | "while" "(" Exp ")" Block
                 | "return" Exp ";"                                [strict]
                 | "print" "(" Exp ")" ";"              	          [strict]
-
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"                     	          
      
@@ -89,10 +88,10 @@ module COMPETITION
                 </T>
 
   rule  not T:Bool => notBool(T)
-  rule  true && E => E
-  rule  false && _ => false
-  rule  true  || _ => true
-  rule  false || E => E
+  rule  true and E => E
+  rule  false and _ => false
+  rule  true  or _ => true
+  rule  false or E => E
 
   rule  I1:Int + I2:Int => I1 +Int I2
   rule  I1:Int - I2:Int => I1 -Int I2
@@ -163,7 +162,6 @@ module COMPETITION
   rule  S1:Stmts S2:Stmts => S1 ~> S2  [structural]
 
   rule  { S:Stmts } => S
-
   rule { } => .K 
 
 endmodule

@@ -130,8 +130,8 @@ context-free priorities
 } > {
     "not" Exp -> Exp {cons("Exp1487Syn")}
 } > { left:
-    Exp "&&" Exp -> Exp {left, cons("Exp1488Syn")}
-    Exp "||" Exp -> Exp {left, cons("Exp1489Syn")}
+    Exp "and" Exp -> Exp {left, cons("Exp1488Syn")}
+    Exp "or" Exp -> Exp {left, cons("Exp1489Syn")}
 } > {
     "execute" Block -> Exp {cons("Exp1490Syn")}
 }
@@ -1028,10 +1028,12 @@ lexical restrictions
     "/" -/- [I].[n].[t]
     ">=" -/- [F].[l].[o].[a].[t]
     "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t]
+    "or" -/- [B].[o].[o].[l]
     "#" -/- [E].[I].[S].[D].[I].[R]
     "-" -/- [F].[l].[o].[a].[t]
     "#" -/- [E].[S].[P].[I].[P].[E]
     "#" -/- [E].[N].[O].[T].[D].[I].[R]
+    "and" -/- [T].[h].[e].[n].[B].[o].[o].[l]
     "<" -/- [S].[t].[r].[i].[n].[g]
     "#freeVars" -/- [S].[e].[t]
     "*" -/- [I].[n].[t]
@@ -1039,7 +1041,9 @@ lexical restrictions
     "=K" -/- [L].[a].[b].[e].[l]
     "+" -/- [S].[t].[r].[i].[n].[g]
     "#substitute" -/- [L].[i].[s].[t]
+    "or" -/- [E].[l].[s].[e].[B].[o].[o].[l]
     "." -/- [M].[y].[B].[a].[g]
+    "and" -/- [B].[o].[o].[l]
     "==K" -/- [L].[i].[s].[t]
     "fresh" -/- [V].[a].[r].[i].[a].[b].[l].[e].[s]
     "<=" -/- [S].[t].[r].[i].[n].[g]
@@ -1216,7 +1220,6 @@ lexical syntax
     "orBool" -> DzStringDz {reject}
     "isSymbolicBag" -> DzStringDz {reject}
     "$hasMapping" -> DzStringDz {reject}
-    "&&" -> DzStringDz {reject}
     "#isDigit" -> DzStringDz {reject}
     "MyListItem" -> DzStringDz {reject}
     "update" -> DzStringDz {reject}
@@ -1346,7 +1349,6 @@ lexical syntax
     "return" -> DzStringDz {reject}
     "#ENOENT" -> DzStringDz {reject}
     "#rebind2" -> DzStringDz {reject}
-    "||" -> DzStringDz {reject}
     "#rebind1" -> DzStringDz {reject}
     "<=" -> DzStringDz {reject}
     "List2KLabel" -> DzStringDz {reject}
@@ -1403,11 +1405,13 @@ lexical syntax
     "--Float" -> DzStringDz {reject}
     "findChar" -> DzStringDz {reject}
     "-MySet" -> DzStringDz {reject}
+    "and" -> DzStringDz {reject}
     "==Set" -> DzStringDz {reject}
     ".MyBag" -> DzStringDz {reject}
     "#substituteList1" -> DzStringDz {reject}
     "#tcpRequest" -> DzStringDz {reject}
     "Id2String" -> DzStringDz {reject}
+    "or" -> DzStringDz {reject}
     "#substitute" -> DzStringDz {reject}
     "#token" -> DzStringDz {reject}
     "#write" -> DzStringDz {reject}
@@ -1544,7 +1548,6 @@ lexical syntax
     "orBool" -> DzIntDz {reject}
     "isSymbolicBag" -> DzIntDz {reject}
     "$hasMapping" -> DzIntDz {reject}
-    "&&" -> DzIntDz {reject}
     "#isDigit" -> DzIntDz {reject}
     "MyListItem" -> DzIntDz {reject}
     "update" -> DzIntDz {reject}
@@ -1674,7 +1677,6 @@ lexical syntax
     "return" -> DzIntDz {reject}
     "#ENOENT" -> DzIntDz {reject}
     "#rebind2" -> DzIntDz {reject}
-    "||" -> DzIntDz {reject}
     "#rebind1" -> DzIntDz {reject}
     "<=" -> DzIntDz {reject}
     "List2KLabel" -> DzIntDz {reject}
@@ -1731,11 +1733,13 @@ lexical syntax
     "--Float" -> DzIntDz {reject}
     "findChar" -> DzIntDz {reject}
     "-MySet" -> DzIntDz {reject}
+    "and" -> DzIntDz {reject}
     "==Set" -> DzIntDz {reject}
     ".MyBag" -> DzIntDz {reject}
     "#substituteList1" -> DzIntDz {reject}
     "#tcpRequest" -> DzIntDz {reject}
     "Id2String" -> DzIntDz {reject}
+    "or" -> DzIntDz {reject}
     "#substitute" -> DzIntDz {reject}
     "#token" -> DzIntDz {reject}
     "#write" -> DzIntDz {reject}
@@ -1872,7 +1876,6 @@ lexical syntax
     "orBool" -> DzFloatDz {reject}
     "isSymbolicBag" -> DzFloatDz {reject}
     "$hasMapping" -> DzFloatDz {reject}
-    "&&" -> DzFloatDz {reject}
     "#isDigit" -> DzFloatDz {reject}
     "MyListItem" -> DzFloatDz {reject}
     "update" -> DzFloatDz {reject}
@@ -2002,7 +2005,6 @@ lexical syntax
     "return" -> DzFloatDz {reject}
     "#ENOENT" -> DzFloatDz {reject}
     "#rebind2" -> DzFloatDz {reject}
-    "||" -> DzFloatDz {reject}
     "#rebind1" -> DzFloatDz {reject}
     "<=" -> DzFloatDz {reject}
     "List2KLabel" -> DzFloatDz {reject}
@@ -2059,11 +2061,13 @@ lexical syntax
     "--Float" -> DzFloatDz {reject}
     "findChar" -> DzFloatDz {reject}
     "-MySet" -> DzFloatDz {reject}
+    "and" -> DzFloatDz {reject}
     "==Set" -> DzFloatDz {reject}
     ".MyBag" -> DzFloatDz {reject}
     "#substituteList1" -> DzFloatDz {reject}
     "#tcpRequest" -> DzFloatDz {reject}
     "Id2String" -> DzFloatDz {reject}
+    "or" -> DzFloatDz {reject}
     "#substitute" -> DzFloatDz {reject}
     "#token" -> DzFloatDz {reject}
     "#write" -> DzFloatDz {reject}

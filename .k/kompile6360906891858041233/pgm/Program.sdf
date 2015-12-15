@@ -119,8 +119,8 @@ context-free priorities
 } > {
     "not" Exp -> Exp {cons("Exp1487Syn")}
 } > { left:
-    Exp "and" Exp -> Exp {left, cons("Exp1488Syn")}
-    Exp "or" Exp -> Exp {left, cons("Exp1489Syn")}
+    Exp "AND" Exp -> Exp {left, cons("Exp1488Syn")}
+    Exp "OR" Exp -> Exp {left, cons("Exp1489Syn")}
 } > {
     "execute" Block -> Exp {cons("Exp1490Syn")}
 }
@@ -214,7 +214,7 @@ context-free syntax
     "KList2KLabel" KList -> KLabel {cons("KLabel1294Syn")}
     "#counter" -> Int {cons("Int1266Syn")}
     "findChar" "(" InsertDzString "," InsertDzString "," InsertDzInt ")" -> Int {cons("Int1203Syn")}
-    "unlock" InsertDzId ";" -> Stmt {cons("Stmt1503Syn")}
+    "unlock" InsertDzId ";" -> Stmt {cons("Stmt1504Syn")}
     K "inKList" KList -> Bool {cons("Bool1267Syn")}
     String -> TCPAnswer {}
     "#substituteKArrow" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1357Syn")}
@@ -234,7 +234,7 @@ context-free syntax
     "replaceAll" "(" InsertDzString "," InsertDzString "," InsertDzString ")" -> String {cons("String1220Syn")}
     Int -> Val {}
     "#substituteBinder" "(" InsertDzK "," InsertDzMap "," InsertDzK ")" -> K {cons("K1358Syn")}
-    "lock" InsertDzId ";" -> Stmt {cons("Stmt1502Syn")}
+    "lock" InsertDzId ";" -> Stmt {cons("Stmt1503Syn")}
     "#substitutePlain" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1368Syn")}
     "chrChar" "(" InsertDzInt ")" -> String {cons("String197Syn")}
     "decomposeMatching" "(" InsertDzKList "," InsertDzKList ")" -> KList {cons("KList1307Syn")}
@@ -248,7 +248,7 @@ context-free syntax
     "#distinctCounter" "(" InsertDzInt ")" -> Int {cons("Int1265Syn")}
     "isMatching" "(" InsertDzKList "," InsertDzKList ")" -> Bool {cons("Bool1305Syn")}
     Ddecl -> Stmt {}
-    Stmts Stmts -> Stmts {right, cons("Stmts1504Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1505Syn")}
     Val -> Exp {}
     Map "[" InsertDzKList "/" InsertDzKList "]" -> Map {cons("Map1273Syn")}
     "#tcpRequest" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1258Syn")}
@@ -328,6 +328,7 @@ context-free syntax
     "#" K -> KLabel {cons("KLabel1300Syn")}
     "K2SMTLib" "(" InsertDzK ")" -> String {cons("String1376Syn")}
     "getKLabel" K -> KLabel {cons("KLabel1299Syn")}
+    Block "||" Block -> Stmt {right, cons("Stmt1502Syn")}
     "print" "(" InsertDzExp ")" ";" -> Stmt {cons("Stmt1500Syn")}
     "#boundVars" "(" InsertDzK ")" -> K {cons("K1334Syn")}
     Stmt -> Stmts {}
@@ -538,6 +539,7 @@ lexical syntax
     "read" -> IdDz {reject}
     "Int2String" -> IdDz {reject}
     "Consts2SMTLib" -> IdDz {reject}
+    "AND" -> IdDz {reject}
     "true" -> IdDz {reject}
     "heated" -> IdDz {reject}
     "Char2String" -> IdDz {reject}
@@ -550,9 +552,8 @@ lexical syntax
     "values" -> IdDz {reject}
     "orElseBool" -> IdDz {reject}
     "findChar" -> IdDz {reject}
-    "and" -> IdDz {reject}
     "Id2String" -> IdDz {reject}
-    "or" -> IdDz {reject}
+    "OR" -> IdDz {reject}
     "rtrim" -> IdDz {reject}
     "inKList" -> IdDz {reject}
     "andBool" -> IdDz {reject}
@@ -561,7 +562,6 @@ lexical syntax
 lexical restrictions
     %% follow restrictions
     "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t]
-    "or" -/- [B].[o].[o].[l]
     "=" -/- [M].[a].[p]
     "#" -/- [E].[B].[A].[D].[F]
     "#" -/- [E].[I].[S].[D].[I].[R]
@@ -570,7 +570,6 @@ lexical restrictions
     "#freshSym" -/- [S].[o].[r].[t]
     "#" -/- [E].[S].[P].[I].[P].[E]
     "#" -/- [E].[N].[O].[T].[D].[I].[R]
-    "and" -/- [T].[h].[e].[n].[B].[o].[o].[l]
     ">" -/- [I].[n].[t]
     "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t].[\1]
     "=" -/- [K].[L].[a].[b].[e].[l]
@@ -584,9 +583,7 @@ lexical restrictions
     "#substitute" -/- [L].[i].[s].[t]
     "=/=K" -/- [L].[a].[b].[e].[l]
     ">" -/- [F].[l].[o].[a].[t]
-    "or" -/- [E].[l].[s].[e].[B].[o].[o].[l]
     "#substitute" -/- [P].[l].[a].[i].[n]
-    "and" -/- [B].[o].[o].[l]
     "==K" -/- [L].[i].[s].[t]
     "fresh" -/- [V].[a].[r].[i].[a].[b].[l].[e].[s]
     "<=" -/- [S].[t].[r].[i].[n].[g]
@@ -877,6 +874,7 @@ lexical syntax
     "andThenBool" -> DzStringDz {reject}
     "return" -> DzStringDz {reject}
     "#rebind2" -> DzStringDz {reject}
+    "||" -> DzStringDz {reject}
     "#ENOENT" -> DzStringDz {reject}
     "#rebind1" -> DzStringDz {reject}
     "<=" -> DzStringDz {reject}
@@ -904,6 +902,7 @@ lexical syntax
     "#substituteFV" -> DzStringDz {reject}
     "=K" -> DzStringDz {reject}
     "Consts2SMTLib" -> DzStringDz {reject}
+    "AND" -> DzStringDz {reject}
     "true" -> DzStringDz {reject}
     "heated" -> DzStringDz {reject}
     "Char2String" -> DzStringDz {reject}
@@ -930,12 +929,11 @@ lexical syntax
     "+Int" -> DzStringDz {reject}
     "findChar" -> DzStringDz {reject}
     "--Float" -> DzStringDz {reject}
-    "and" -> DzStringDz {reject}
     "==Set" -> DzStringDz {reject}
     "#substituteList1" -> DzStringDz {reject}
     "#tcpRequest" -> DzStringDz {reject}
     "Id2String" -> DzStringDz {reject}
-    "or" -> DzStringDz {reject}
+    "OR" -> DzStringDz {reject}
     "#substitute" -> DzStringDz {reject}
     "#token" -> DzStringDz {reject}
     "rtrim" -> DzStringDz {reject}
@@ -1163,6 +1161,7 @@ lexical syntax
     "andThenBool" -> IdDz {reject}
     "return" -> IdDz {reject}
     "#rebind2" -> IdDz {reject}
+    "||" -> IdDz {reject}
     "#ENOENT" -> IdDz {reject}
     "#rebind1" -> IdDz {reject}
     "<=" -> IdDz {reject}
@@ -1190,6 +1189,7 @@ lexical syntax
     "#substituteFV" -> IdDz {reject}
     "=K" -> IdDz {reject}
     "Consts2SMTLib" -> IdDz {reject}
+    "AND" -> IdDz {reject}
     "true" -> IdDz {reject}
     "heated" -> IdDz {reject}
     "Char2String" -> IdDz {reject}
@@ -1216,12 +1216,11 @@ lexical syntax
     "+Int" -> IdDz {reject}
     "findChar" -> IdDz {reject}
     "--Float" -> IdDz {reject}
-    "and" -> IdDz {reject}
     "==Set" -> IdDz {reject}
     "#substituteList1" -> IdDz {reject}
     "#tcpRequest" -> IdDz {reject}
     "Id2String" -> IdDz {reject}
-    "or" -> IdDz {reject}
+    "OR" -> IdDz {reject}
     "#substitute" -> IdDz {reject}
     "#token" -> IdDz {reject}
     "rtrim" -> IdDz {reject}
@@ -1449,6 +1448,7 @@ lexical syntax
     "andThenBool" -> DzIntDz {reject}
     "return" -> DzIntDz {reject}
     "#rebind2" -> DzIntDz {reject}
+    "||" -> DzIntDz {reject}
     "#ENOENT" -> DzIntDz {reject}
     "#rebind1" -> DzIntDz {reject}
     "<=" -> DzIntDz {reject}
@@ -1476,6 +1476,7 @@ lexical syntax
     "#substituteFV" -> DzIntDz {reject}
     "=K" -> DzIntDz {reject}
     "Consts2SMTLib" -> DzIntDz {reject}
+    "AND" -> DzIntDz {reject}
     "true" -> DzIntDz {reject}
     "heated" -> DzIntDz {reject}
     "Char2String" -> DzIntDz {reject}
@@ -1502,12 +1503,11 @@ lexical syntax
     "+Int" -> DzIntDz {reject}
     "findChar" -> DzIntDz {reject}
     "--Float" -> DzIntDz {reject}
-    "and" -> DzIntDz {reject}
     "==Set" -> DzIntDz {reject}
     "#substituteList1" -> DzIntDz {reject}
     "#tcpRequest" -> DzIntDz {reject}
     "Id2String" -> DzIntDz {reject}
-    "or" -> DzIntDz {reject}
+    "OR" -> DzIntDz {reject}
     "#substitute" -> DzIntDz {reject}
     "#token" -> DzIntDz {reject}
     "rtrim" -> DzIntDz {reject}
@@ -1735,6 +1735,7 @@ lexical syntax
     "andThenBool" -> DzFloatDz {reject}
     "return" -> DzFloatDz {reject}
     "#rebind2" -> DzFloatDz {reject}
+    "||" -> DzFloatDz {reject}
     "#ENOENT" -> DzFloatDz {reject}
     "#rebind1" -> DzFloatDz {reject}
     "<=" -> DzFloatDz {reject}
@@ -1762,6 +1763,7 @@ lexical syntax
     "#substituteFV" -> DzFloatDz {reject}
     "=K" -> DzFloatDz {reject}
     "Consts2SMTLib" -> DzFloatDz {reject}
+    "AND" -> DzFloatDz {reject}
     "true" -> DzFloatDz {reject}
     "heated" -> DzFloatDz {reject}
     "Char2String" -> DzFloatDz {reject}
@@ -1788,12 +1790,11 @@ lexical syntax
     "+Int" -> DzFloatDz {reject}
     "findChar" -> DzFloatDz {reject}
     "--Float" -> DzFloatDz {reject}
-    "and" -> DzFloatDz {reject}
     "==Set" -> DzFloatDz {reject}
     "#substituteList1" -> DzFloatDz {reject}
     "#tcpRequest" -> DzFloatDz {reject}
     "Id2String" -> DzFloatDz {reject}
-    "or" -> DzFloatDz {reject}
+    "OR" -> DzFloatDz {reject}
     "#substitute" -> DzFloatDz {reject}
     "#token" -> DzFloatDz {reject}
     "rtrim" -> DzFloatDz {reject}
