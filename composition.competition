@@ -1,0 +1,5 @@
+var x;
+
+x = 0;
+
+{ x=2; } parallel { x = 3; } ;

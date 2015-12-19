@@ -3,11 +3,11 @@ semaphore pmutex;
 var x;
 x=read();
 
-execute { 
+spawn { 
 	x = x * 2; 
 	};
 
-execute { 
+spawn { 
 	x=x+10; 
 	};
 

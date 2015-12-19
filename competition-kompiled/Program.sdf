@@ -177,7 +177,6 @@ context-free syntax
     "#substitute" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1353Syn")}
     List "=/=List" List -> Bool {cons("Bool140Syn")}
     "#binderSplit1" "(" InsertDzKLabel "," InsertDzInt "," InsertDzKList "," InsertDzKList "," InsertDzKList "," InsertDzSet ")" -> K {cons("K1337Syn")}
-    "setSem" "(" InsertDzId "," InsertDzExp ")" ";" -> Stmt {cons("Stmt1504Syn")}
     {Int ","}* -> Ints {cons("Ints1ListSyn")}
     "#freshSymN" "(" InsertDzK "," InsertDzInt ")" -> K {cons("K1397Syn")}
     "$hasMapping" "(" InsertDzMap "," InsertDzK ")" -> Bool {cons("Bool1276Syn")}
@@ -249,7 +248,7 @@ context-free syntax
     "#distinctCounter" "(" InsertDzInt ")" -> Int {cons("Int1265Syn")}
     "isMatching" "(" InsertDzKList "," InsertDzKList ")" -> Bool {cons("Bool1305Syn")}
     Ddecl -> Stmt {}
-    Stmts Stmts -> Stmts {right, cons("Stmts1505Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1504Syn")}
     Val -> Exp {}
     Map "[" InsertDzKList "/" InsertDzKList "]" -> Map {cons("Map1273Syn")}
     "#tcpRequest" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1258Syn")}
@@ -468,7 +467,6 @@ lexical syntax
     "notBool" -> IdDz {reject}
     "Map2KLabel" -> IdDz {reject}
     "lengthString" -> IdDz {reject}
-    "setSem" -> IdDz {reject}
     "unlock" -> IdDz {reject}
     "ltrim" -> IdDz {reject}
     "isBuiltin" -> IdDz {reject}
@@ -749,7 +747,6 @@ lexical syntax
     "^Int" -> DzStringDz {reject}
     "#freeVarsBinder1" -> DzStringDz {reject}
     "#freeVarsBinder2" -> DzStringDz {reject}
-    "setSem" -> DzStringDz {reject}
     "#substituteBinder1" -> DzStringDz {reject}
     "#substituteBinder2" -> DzStringDz {reject}
     "#substMap" -> DzStringDz {reject}
@@ -1036,7 +1033,6 @@ lexical syntax
     "^Int" -> IdDz {reject}
     "#freeVarsBinder1" -> IdDz {reject}
     "#freeVarsBinder2" -> IdDz {reject}
-    "setSem" -> IdDz {reject}
     "#substituteBinder1" -> IdDz {reject}
     "#substituteBinder2" -> IdDz {reject}
     "#substMap" -> IdDz {reject}
@@ -1323,7 +1319,6 @@ lexical syntax
     "^Int" -> DzIntDz {reject}
     "#freeVarsBinder1" -> DzIntDz {reject}
     "#freeVarsBinder2" -> DzIntDz {reject}
-    "setSem" -> DzIntDz {reject}
     "#substituteBinder1" -> DzIntDz {reject}
     "#substituteBinder2" -> DzIntDz {reject}
     "#substMap" -> DzIntDz {reject}
@@ -1610,7 +1605,6 @@ lexical syntax
     "^Int" -> DzFloatDz {reject}
     "#freeVarsBinder1" -> DzFloatDz {reject}
     "#freeVarsBinder2" -> DzFloatDz {reject}
-    "setSem" -> DzFloatDz {reject}
     "#substituteBinder1" -> DzFloatDz {reject}
     "#substituteBinder2" -> DzFloatDz {reject}
     "#substMap" -> DzFloatDz {reject}

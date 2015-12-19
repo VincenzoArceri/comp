@@ -1,3 +1,6 @@
+/*
+  Sintassi di Competition
+*/
 module COMPETITION-SYN
 	
 	syntax Decl ::= "var" Ids ";" | "semaphore" Ids ";"
@@ -32,7 +35,7 @@ module COMPETITION-SYN
   syntax Strings ::= List{String, ","}
 
   syntax Block ::= "{" "}"								
-                | "{" Stmts "}"							
+                | "{" Stmts "}"
 
   syntax Stmt ::= Decl | Block
                 | Exp ";"                                         [strict]
@@ -43,19 +46,18 @@ module COMPETITION-SYN
                 | "return" Exp ";"                                [strict]
                 | "print" "(" Exp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
-                | "unlock" Id ";"   
-                | "setSem" "(" Id "," Exp ")" ";"                 [strict(2)]         
-     
+                | "unlock" Id ";"
+                
   syntax Stmts ::= Stmt
                  | Stmts Stmts                                    [right]
 
   rule if (E) S => if (E) S else {}                               [macro]
-  //rule var E1:Exp, E2:Exp, Es:Exps; => var E1; var E2, Es;        [macro]
-  //rule var X:Id = E:Exp; => var X; X = E;                             [macro]
 
 endmodule
 
-
+/*
+  Semantica di Competition
+*/
 module COMPETITION
 	imports COMPETITION-SYN
 	imports SUBSTITUTION
@@ -122,12 +124,12 @@ module COMPETITION
   rule  _:Val; => .K
 
   rule  <k> lock P:Id; => 0 ; ... </k>
-        //<holds> Holds:Set => Holds SetItem(P) </holds>
-  		  <busy> ... P |-> (L:Int => L -Int 1) </busy>  when L =/=Int 0
+        <holds> Holds:Set => Holds SetItem(P) </holds>
+  		  <busy> ... P |-> (L:Int => L -Int 1) </busy>  when ((L =/=Int 0) andBool notBool(P in Holds))
 
   rule  <k> unlock P:Id ; => 1 ; ... </k>
-       // <holds> Holds:Set => Holds -Set SetItem(P) </holds>
-        <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> 
+        <holds> Holds:Set => Holds -Set SetItem(P) </holds>
+        <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
 
 
   rule  <k> X:Id => I:Int ...</k>
@@ -151,21 +153,20 @@ module COMPETITION
 		    <env> Rho:Map => Rho[L:Int/X] </env>
 	     	<store> Delta:Map => Delta[0 /L] </store> when fresh(L:Int)  [assignment]
 
+  rule  var .Ids ; => .K      [structural]
+
   rule  <k> semaphore (X:Id,X1:Ids => X1) ; ... </k>
         <busy> Mutex:Map => Mutex[1/X] </busy>
   rule semaphore .Ids ; => .K
-
-  rule <k> setSem(X:Id, I:Int) ; => I; ... </k>
-        <busy> ... X |-> (_ => I) ... </busy>
 
 	rule  <k> X:Id = I:Int ; => I; ... </k>
 		    <env> ... X |-> N:Int ... </env>
 		    <store> ... N |-> (_ => I) </store> 
 
 	rule  V:Val ; => .K				[structural]
-	rule  var .Ids ; => .K 			[structural]
 
   rule  S1:Stmts S2:Stmts => S1 ~> S2  [structural]
+
 
   rule  { S:Stmts } => S
   rule { } => .K 
