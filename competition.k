@@ -1,6 +1,6 @@
 module COMPETITION-SYN
 	
-	syntax Decl ::= "var" Ids ";" | "mutex" Ids ";"
+	syntax Decl ::= "var" Ids ";" | "semaphore" Ids ";"
 
   syntax Exp ::= Int | Bool | Id | String
                | "(" Exp ")"             [bracket]				    
@@ -22,10 +22,9 @@ module COMPETITION-SYN
                | Exp "!=" Exp            [strict, non-assoc]
                > "not" Exp               [strict]
                > left:
-                 Exp "and" Exp            [strict(1), left]
+                 Exp "and" Exp           [strict(1), left]
                | Exp "or" Exp            [strict(1), left]
-               > "execute" Block							
-               //> Id "=" Exp            [strict(2), right]
+               > "spawn" Block							
 
   syntax Ids  ::= List{Id,","}
   syntax Exps ::= List{Exp,","}          [strict]  // automatically hybrid now
@@ -44,7 +43,8 @@ module COMPETITION-SYN
                 | "return" Exp ";"                                [strict]
                 | "print" "(" Exp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
-                | "unlock" Id ";"                     	          
+                | "unlock" Id ";"   
+                | "setSem" "(" Id "," Exp ")" ";"                 [strict(2)]         
      
   syntax Stmts ::= Stmt
                  | Stmts Stmts                                    [right]
@@ -84,7 +84,7 @@ module COMPETITION
                   	<out color="brown" stream="stdout"> .List </out>
                   </streams>
 
-                  <mutex> .Map </mutex>
+                  <busy> .Map </busy>
                 </T>
 
   rule  not T:Bool => notBool(T)
@@ -116,25 +116,29 @@ module COMPETITION
   rule 	<k> read() => I ...</k> 
   		  <in> ListItem(I:Int) => .List ...</in>   [read]
 
-  rule 	<k> print(I:Int) ; => I ;... </k> 
-  		  <out>... .List => ListItem(I) </out> 	   [print]
+  rule 	<k> print(V:Val) ; => V ;... </k> 
+  		  <out>... .List => ListItem(V) </out> 	   [print]
 
   rule  _:Val; => .K
 
   rule  <k> lock P:Id; => 0 ; ... </k>
-  		  <holds> Holds:Set => Holds SetItem(P) </holds> 
-  		  <mutex>	... P |-> (1 => 0) ... </mutex> when notBool(P in Holds)
+        //<holds> Holds:Set => Holds SetItem(P) </holds>
+  		  <busy> ... P |-> (L:Int => L -Int 1) </busy>  when L =/=Int 0
 
   rule  <k> unlock P:Id ; => 1 ; ... </k>
-  		  <holds> Holds:Set => Holds -Set SetItem(P) </holds>
-  		  <mutex>	... P |-> (0 => 1) ... </mutex> when (P in Holds)
+       // <holds> Holds:Set => Holds -Set SetItem(P) </holds>
+        <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> 
+
 
   rule  <k> X:Id => I:Int ...</k>
         <env>... X |-> L:Int ...</env>
-        <store>... L |-> I:Int ...</store>
+        <store>... L |-> I:Int ...</store>  [lookup]
+
+  rule  <k> X:Id => I:Int ...</k>
+        <busy>... X |-> I ...</busy>
 
   rule  <thread>...
-          <k> execute S:Block => T:Int ...</k>
+          <k> spawn S:Block => T:Int ...</k>
           <env> Env:Map </env>
        ...</thread>
        (. => <thread>...
@@ -143,14 +147,16 @@ module COMPETITION
                <id> T </id>
          ... </thread>) when fresh(T:Int)
 
-  rule  <k> mutex (P:Id, P1:Ids => P1) ; ... </k>
-        <mutex> Mutex:Map => Mutex[1/P] </mutex>
-
-	rule  mutex .Ids ; => .K
-
   rule  <k> var (X:Id,X1:Ids => X1) ; ... </k>
 		    <env> Rho:Map => Rho[L:Int/X] </env>
-	     	<store> Delta:Map => Delta[0 /L] </store> when fresh(L:Int)
+	     	<store> Delta:Map => Delta[0 /L] </store> when fresh(L:Int)  [assignment]
+
+  rule  <k> semaphore (X:Id,X1:Ids => X1) ; ... </k>
+        <busy> Mutex:Map => Mutex[1/X] </busy>
+  rule semaphore .Ids ; => .K
+
+  rule <k> setSem(X:Id, I:Int) ; => I; ... </k>
+        <busy> ... X |-> (_ => I) ... </busy>
 
 	rule  <k> X:Id = I:Int ; => I; ... </k>
 		    <env> ... X |-> N:Int ... </env>

@@ -1,44 +1,38 @@
-mutex pmutex;
-
-var bucket, globalCounter;
-
+var globalCounter;
 globalCounter = 0;
-bucket = 50;
 
+semaphore fillCount;
+setSem(fillCount, 0);
+
+semaphore emptyCount;
+setSem(emptyCount, 50);
+ 
 execute {
-	var counter;
-	counter = 0;
+     while (true) {
+         lock emptyCount;
 
-	while (globalCounter <= 1000) {
-		lock pmutex;
-		
-		bucket = bucket - 1;
-		globalCounter = globalCounter +1;
-		
-		unlock pmutex;
+         print("Producer\n");
+         print(emptyCount);
+         print("\n");
+         print(fillCount);
+         print("\n");
+         
+         unlock fillCount;
 
-		counter = counter + 1;
-	}
 
-	print(0);
+     }
 };
 
 execute {
-	var counter;
-	counter = 0;
-
-	while (globalCounter <= 1000) {
-		lock pmutex;
-		
-		bucket = bucket +1;
-		globalCounter = globalCounter +1;
-
-		unlock pmutex;
-
-		counter = counter +1;
-	}
-
-	print(0);
+     while (true) {
+         lock fillCount;
+                   print("Consumer\n");
+          print(emptyCount);
+          print("\n");
+          print(fillCount);
+          print("\n");
+          unlock emptyCount;
+     }
 };
 
-print(0);
+print("Finished\n");

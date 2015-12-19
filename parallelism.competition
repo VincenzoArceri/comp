@@ -1,6 +1,14 @@
+semaphore pmutex;
+
 var x;
-mutex p;
+x=read();
 
-x = 0;
+execute { 
+	x = x * 2; 
+	};
 
-{ lock p; x =1; unlock p; } || { lock p; x =1; unlock p; }
+execute { 
+	x=x+10; 
+	};
+
+print(x);
