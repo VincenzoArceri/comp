@@ -31,6 +31,8 @@ module COMPETITION-SYN
   syntax Exp ::= AExp | BExp
   syntax Ids  ::= List{Id,","}
 
+  //syntax AtomicBlock ::= "do" Stmts "end"      [strict(1)]
+
   syntax Stmt ::= Decl | Block
                 | "spawn" Block
                 | Exp ";"                                           [strict]
@@ -41,10 +43,10 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
-                | "await" BExp "do" Block
+                | "await" BExp "do" Block 
 
-  syntax Block ::= "{" "}"
-                | "{" Stmts "}"
+
+  syntax Block ::= "{" Stmts "}" | "{" "}"
                 
   syntax Stmts ::= Stmt
                  | Stmts Stmts                                      [right]
@@ -61,7 +63,7 @@ module COMPETITION
 	imports SUBSTITUTION
 	imports BUILTIN-SYNTAX-HOOKS
 
-  syntax Val ::= Int | Bool
+  syntax Val ::= Int | Bool 
   syntax KResult ::= Val
 
   configuration <T color="red">
@@ -164,13 +166,10 @@ module COMPETITION
 
   rule  { S:Stmts } => S
   rule { } => .K 
+  
+  rule await B:BExp do Bl:Block =>  B ~> await B do Bl
 
-  rule await B:BExp do { S:Stmts } =>  B ~> await B do { S }
-
-  syntax Stmt ::= "do" Block
-  rule false ~> await B do { S } => await B do { S }
-  rule true ~> await B do { S } => do { S }
-
-  rule do { S } => S [strict(1)]
+  rule false ~> await B do Bl:Block => await B do Bl:Block
+  rule true ~> await B do Bl:Block => Bl  
 
 endmodule

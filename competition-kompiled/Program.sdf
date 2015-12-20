@@ -181,7 +181,7 @@ context-free syntax
     "lengthList" List -> Int {cons("Int1290Syn")}
     KList "=/=KList" KList -> Bool {cons("Bool136Syn")}
     "isBuiltin" "(" InsertDzK ")" -> Bool {cons("Bool1304Syn")}
-    "{" InsertDzStmts "}" -> Block {cons("Block1503Syn")}
+    "{" InsertDzStmts "}" -> Block {cons("Block1502Syn")}
     Val -> KResult {}
     Map "[" InsertDzMap "]" -> Map {cons("Map1UpdateMapWithMapSyn")}
     "#isMapInK" "(" InsertDzK ")" -> Bool {cons("Bool1279Syn")}
@@ -216,7 +216,7 @@ context-free syntax
     K "inKList" KList -> Bool {cons("Bool1267Syn")}
     String -> TCPAnswer {}
     "#substituteKArrow" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1357Syn")}
-    "{" "}" -> Block {cons("Block1502Syn")}
+    "{" "}" -> Block {cons("Block1503Syn")}
     "(" InsertDzAExp ")" -> AExp {cons("AExp1Bracket")}
     "rtrim" "(" InsertDzString ")" -> String {cons("String1227Syn")}
     "isBounding" "(" InsertDzKLabel "," InsertDzInt ")" -> Bool {cons("Bool1330Syn")}
@@ -257,7 +257,6 @@ context-free syntax
     "await" InsertDzBExp "do" Block -> Stmt {cons("Stmt1500Syn")}
     "getVariables" "(" InsertDzK ")" -> Set {cons("Set1323Syn")}
     List "==List" List -> Bool {cons("Bool139Syn")}
-    "do" Block -> Stmt {cons("Stmt1505Syn")}
     Map "=/=Map" Map -> Bool {cons("Bool133Syn")}
     "#rebind1" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1365Syn")}
     Set "<=Set" Set -> Bool {cons("Bool127Syn")}
