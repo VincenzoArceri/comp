@@ -98,29 +98,26 @@ context-free priorities
 {
     Int -> AExp {}
     Id -> AExp {}
-    "-" AExp -> AExp {cons("AExp1473Syn")}
+    AExp "/" AExp -> AExp {left, cons("AExp1473Syn")}
+    AExp "*" AExp -> AExp {left, cons("AExp1474Syn")}
 } > {
-    AExp "/" AExp -> AExp {left, cons("AExp1475Syn")}
-    AExp "*" AExp -> AExp {left, cons("AExp1476Syn")}
-    AExp "%" AExp -> AExp {left, cons("AExp1477Syn")}
-} > {
-    AExp "+" AExp -> AExp {left, cons("AExp1478Syn")}
-    AExp "-" AExp -> AExp {left, cons("AExp1479Syn")}
+    AExp "+" AExp -> AExp {left, cons("AExp1475Syn")}
+    AExp "-" AExp -> AExp {left, cons("AExp1476Syn")}
 }
 
 context-free priorities
 {
     Bool -> BExp {}
-    AExp "<" AExp -> BExp {non-assoc, cons("BExp1480Syn")}
-    AExp "<=" AExp -> BExp {non-assoc, cons("BExp1482Syn")}
-    AExp ">" AExp -> BExp {non-assoc, cons("BExp1483Syn")}
-    AExp ">=" AExp -> BExp {non-assoc, cons("BExp1484Syn")}
-    AExp "==" AExp -> BExp {non-assoc, cons("BExp1485Syn")}
-    AExp "!=" AExp -> BExp {non-assoc, cons("BExp1486Syn")}
-    "!" BExp -> BExp {cons("BExp1487Syn")}
+    AExp "<" AExp -> BExp {non-assoc, cons("BExp1477Syn")}
+    AExp "<=" AExp -> BExp {non-assoc, cons("BExp1478Syn")}
+    AExp ">" AExp -> BExp {non-assoc, cons("BExp1479Syn")}
+    AExp ">=" AExp -> BExp {non-assoc, cons("BExp1480Syn")}
+    AExp "==" AExp -> BExp {non-assoc, cons("BExp1482Syn")}
+    AExp "!=" AExp -> BExp {non-assoc, cons("BExp1483Syn")}
+    "!" BExp -> BExp {cons("BExp1484Syn")}
 } > {
-    BExp "and" BExp -> BExp {left, cons("BExp1488Syn")}
-    BExp "or" BExp -> BExp {left, cons("BExp1489Syn")}
+    BExp "and" BExp -> BExp {left, cons("BExp1485Syn")}
+    BExp "or" BExp -> BExp {left, cons("BExp1486Syn")}
 }
 
 context-free start-symbols
@@ -129,9 +126,8 @@ context-free syntax
     "isVariable" "(" InsertDzMap ")" -> Bool {cons("Bool1386Syn")}
     "#binderSplit" "(" InsertDzK ")" -> K {cons("K1336Syn")}
     K "[" InsertDzKList "/" InsertDzKList "]" -> K {cons("K1349Syn")}
-    AExp -> Exp {}
     "#patternMatch" "(" InsertDzKList "," InsertDzKList ")" -> K {cons("K1308Syn")}
-    Exp ";" -> Stmt {cons("Stmt1492Syn")}
+    Exp ";" -> Stmt {cons("Stmt1490Syn")}
     "#freshSubst1" "(" InsertDzSet "," InsertDzSet "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1367Syn")}
     "ordChar" "(" InsertDzString ")" -> Int {cons("Int198Syn")}
     Map "<=Map" Map -> Bool {cons("Bool130Syn")}
@@ -146,7 +142,6 @@ context-free syntax
     "String2Char" "(" InsertDzString ")" -> Char {cons("Char1237Syn")}
     "#map" "(" InsertDzMap ")" -> K {cons("K1278Syn")}
     "isSymbolicBag" "(" InsertDzBag ")" -> K {cons("K1392Syn")}
-    "if" "(" InsertDzBExp ")" Block -> Stmt {cons("Stmt1495Syn")}
     "getMatching" "(" InsertDzKList "," InsertDzKList ")" -> Map {cons("Map1306Syn")}
     "intersectSet" "(" InsertDzSet "," InsertDzSet ")" -> Set {cons("Set1286Syn")}
     "#substitutePlainList" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1369Syn")}
@@ -160,6 +155,7 @@ context-free syntax
     "replace" "(" InsertDzString "," InsertDzString "," InsertDzString "," InsertDzInt ")" -> String {cons("String1222Syn")}
     "#isWhiteSpace" "(" InsertDzString ")" -> Bool {cons("Bool1238Syn")}
     "#parseToken" "(" InsertDzString "," InsertDzString ")" -> K {cons("K1240Syn")}
+    "if" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1494Syn")}
     "#freshVar1" "(" InsertDzSet "," InsertDzK ")" -> K {cons("K1327Syn")}
     "#substituteK" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1352Syn")}
     "maxInt" "(" InsertDzInt "," InsertDzInt ")" -> Int {cons("Int165Syn")}
@@ -170,18 +166,16 @@ context-free syntax
     "freeVariables" "(" InsertDzSet ")" -> Set {cons("Set1340Syn")}
     KLabel "==KLabel" KLabel -> Bool {cons("Bool137Syn")}
     "#patternMatch1" "(" InsertDzKList "," InsertDzMap ")" -> K {cons("K1309Syn")}
-    "read" "(" ")" -> AExp {cons("AExp1474Syn")}
     "SMTCall" "(" InsertDzString ")" -> String {cons("String1380Syn")}
     "#substitute" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1353Syn")}
     List "=/=List" List -> Bool {cons("Bool140Syn")}
-    BExp -> Exp {}
     "#binderSplit1" "(" InsertDzKLabel "," InsertDzInt "," InsertDzKList "," InsertDzKList "," InsertDzKList "," InsertDzSet ")" -> K {cons("K1337Syn")}
     "#freshSymN" "(" InsertDzK "," InsertDzInt ")" -> K {cons("K1397Syn")}
     "$hasMapping" "(" InsertDzMap "," InsertDzK ")" -> Bool {cons("Bool1276Syn")}
     "lengthList" List -> Int {cons("Int1290Syn")}
     KList "=/=KList" KList -> Bool {cons("Bool136Syn")}
     "isBuiltin" "(" InsertDzK ")" -> Bool {cons("Bool1304Syn")}
-    "{" InsertDzStmts "}" -> Block {cons("Block1502Syn")}
+    "{" InsertDzStmts "}" -> Block {cons("Block1488Syn")}
     Val -> KResult {}
     Map "[" InsertDzMap "]" -> Map {cons("Map1UpdateMapWithMapSyn")}
     "#isMapInK" "(" InsertDzK ")" -> Bool {cons("Bool1279Syn")}
@@ -198,7 +192,6 @@ context-free syntax
     Id -> Variable {}
     DzInt -> Int {}
     K "[" InsertDzMap "]" -> K {cons("K1350Syn")}
-    "while" "(" InsertDzBExp ")" Block -> Stmt {cons("Stmt1496Syn")}
     KList "=KList" KList -> Bool {cons("Bool147Syn")}
     "#isDigit" "(" InsertDzString ")" -> Bool {cons("Bool1239Syn")}
     Int "dividesInt" Int -> Bool {cons("Bool175Syn")}
@@ -216,7 +209,7 @@ context-free syntax
     K "inKList" KList -> Bool {cons("Bool1267Syn")}
     String -> TCPAnswer {}
     "#substituteKArrow" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1357Syn")}
-    "{" "}" -> Block {cons("Block1500Syn")}
+    "{" "}" -> Block {cons("Block1487Syn")}
     "(" InsertDzAExp ")" -> AExp {cons("AExp1Bracket")}
     "rtrim" "(" InsertDzString ")" -> String {cons("String1227Syn")}
     "isBounding" "(" InsertDzKLabel "," InsertDzInt ")" -> Bool {cons("Bool1330Syn")}
@@ -242,16 +235,19 @@ context-free syntax
     "directionalityChar" "(" InsertDzString ")" -> String {cons("String1235Syn")}
     "KLabel2String" "(" InsertDzKLabel ")" -> String {cons("String1209Syn")}
     List "=List" List -> Bool {cons("Bool143Syn")}
+    "var" InsertDzIds ";" -> Ddecl {cons("Ddecl1470Syn")}
     "#getVarsFromK" "(" InsertDzK ")" -> Set {cons("Set1322Syn")}
     "#distinctCounter" "(" InsertDzInt ")" -> Int {cons("Int1265Syn")}
     "isMatching" "(" InsertDzKList "," InsertDzKList ")" -> Bool {cons("Bool1305Syn")}
     Ddecl -> Stmt {}
-    Stmts Stmts -> Stmts {right, cons("Stmts1503Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1500Syn")}
+    Val -> Exp {}
     Map "[" InsertDzKList "/" InsertDzKList "]" -> Map {cons("Map1273Syn")}
     "#tcpRequest" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1258Syn")}
     "CellLabel2KLabel" CellLabel -> KLabel {cons("KLabel1293Syn")}
     "#EBADF" -> TCPError {cons("TCPError1254Syn")}
     "#substituteList1" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzKList ")" -> K {cons("K1356Syn")}
+    String -> Val {}
     "isToken" "(" InsertDzK ")" -> Bool {cons("Bool1303Syn")}
     K "inVars" K -> Bool {cons("Bool1333Syn")}
     "getVariables" "(" InsertDzK ")" -> Set {cons("Set1323Syn")}
@@ -262,6 +258,7 @@ context-free syntax
     Int "=Int" Int -> Bool {cons("Bool174Syn")}
     "Consts2SMTLib" "(" InsertDzSet ")" -> String {cons("String1378Syn")}
     "fresh" "(" InsertDzK ")" -> Bool {cons("Bool1FreshSyn")}
+    "return" InsertDzExp ";" -> Stmt {cons("Stmt1496Syn")}
     "#evalHelper" Map -> Bag {cons("Bag1EvalHelperSyn")}
     "#ENAMETOOLONG" -> TCPError {cons("TCPError1253Syn")}
     "absInt" "(" InsertDzInt ")" -> Int {cons("Int166Syn")}
@@ -292,7 +289,7 @@ context-free syntax
     K "=K" K -> Bool {cons("Bool142Syn")}
     "List2KLabel" List -> KLabel {cons("KLabel1297Syn")}
     "isVariable" "(" InsertDzBag ")" -> Bool {cons("Bool1385Syn")}
-    "spawn" Block -> Stmt {cons("Stmt1490Syn")}
+    "spawn" Block -> Stmt {cons("Stmt1489Syn")}
     KLabel "=/=KLabel" KLabel -> Bool {cons("Bool138Syn")}
     "#freshSymSort" "(" InsertDzString ")" -> K {cons("K1396Syn")}
     Bag "=Bag" Bag -> Bool {cons("Bool145Syn")}
@@ -306,10 +303,12 @@ context-free syntax
     "findString" "(" InsertDzString "," InsertDzString "," InsertDzInt ")" -> Int {cons("Int1200Syn")}
     "String2Int" "(" InsertDzString ")" -> Int {cons("Int1207Syn")}
     "String2KLabel" "(" InsertDzString ")" -> KLabel {cons("KLabel1String2KLabelSyn")}
+    "if" "(" InsertDzExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1493Syn")}
     "#checkTCPAnswer" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1259Syn")}
     "#if" InsertDzBool "#then" InsertDzKItem "#else" InsertDzKItem "#fi" -> KItem {cons("KItem124Syn")}
     "#getVars1" "(" InsertDzKList "," InsertDzSet ")" -> K {cons("K1325Syn")}
     String "==String" String -> Bool {left, cons("Bool195Syn")}
+    "while" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1495Syn")}
     "String2Float" "(" InsertDzString ")" -> Float {cons("Float1206Syn")}
     "isSymbolicSet" "(" InsertDzSet ")" -> K {cons("K1390Syn")}
     "#substMap" "(" InsertDzMap ")" -> K {cons("K1364Syn")}
@@ -322,7 +321,7 @@ context-free syntax
     "#" K -> KLabel {cons("KLabel1300Syn")}
     "K2SMTLib" "(" InsertDzK ")" -> String {cons("String1376Syn")}
     "getKLabel" K -> KLabel {cons("KLabel1299Syn")}
-    "print" "(" InsertDzAExp ")" ";" -> Stmt {cons("Stmt1497Syn")}
+    "print" "(" InsertDzExp ")" ";" -> Stmt {cons("Stmt1497Syn")}
     "#boundVars" "(" InsertDzK ")" -> K {cons("K1334Syn")}
     Stmt -> Stmts {}
     Set "-Set" Set -> Set {cons("Set1282Syn")}
@@ -331,7 +330,7 @@ context-free syntax
     Block -> Stmt {}
     Set "==Set" Set -> Bool {cons("Bool128Syn")}
     DzString -> String {}
-    "int" InsertDzIds ";" -> Ddecl {cons("Ddecl1470Syn")}
+    Id "=" InsertDzExp ";" -> Stmt {cons("Stmt1492Syn")}
     "Float2String" "(" InsertDzFloat ")" -> String {cons("String1205Syn")}
     KResult -> K {}
     "isSymbolicList" "(" InsertDzList ")" -> K {cons("K1389Syn")}
@@ -363,15 +362,12 @@ context-free syntax
     "#freeVars" "(" InsertDzKList ")" -> K {cons("K1343Syn")}
     Int ">=Int" Int -> Bool {left, cons("Bool169Syn")}
     "Set2KTerm" "(" InsertDzSet ")" -> K {cons("K1288Syn")}
-    Id "=" InsertDzAExp ";" -> Stmt {cons("Stmt1493Syn")}
     "categoryChar" "(" InsertDzString ")" -> String {cons("String1234Syn")}
     "#noparse" -> TCPError {cons("TCPError1247Syn")}
-    "if" "(" InsertDzBExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1494Syn")}
     {Id ","}* -> Ids {cons("Ids1ListSyn")}
     AExp -> InsertDzAExp
     Set -> InsertDzSet
     Stmts -> InsertDzStmts
-    BExp -> InsertDzBExp
     Bag -> InsertDzBag
     K -> InsertDzK
     String -> InsertDzString
@@ -385,6 +381,7 @@ context-free syntax
     Block -> InsertDzBlock
     List -> InsertDzList
     Id -> InsertDzId
+    Exp -> InsertDzExp
     Map -> InsertDzMap
     KItem -> InsertDzKItem
 
@@ -494,6 +491,7 @@ lexical syntax
     "if" -> IdDz {reject}
     "isSet" -> IdDz {reject}
     "in" -> IdDz {reject}
+    "var" -> IdDz {reject}
     "Float2String" -> IdDz {reject}
     "decomposeMatching" -> IdDz {reject}
     "isKLabelConstant" -> IdDz {reject}
@@ -517,6 +515,7 @@ lexical syntax
     "impliesBool" -> IdDz {reject}
     "SMTLibQuery" -> IdDz {reject}
     "andThenBool" -> IdDz {reject}
+    "return" -> IdDz {reject}
     "List2KLabel" -> IdDz {reject}
     "replace" -> IdDz {reject}
     "lengthList" -> IdDz {reject}
@@ -528,7 +527,6 @@ lexical syntax
     "Vars2SMTLib" -> IdDz {reject}
     "countAllOccurences" -> IdDz {reject}
     "KLabel2KLabel" -> IdDz {reject}
-    "read" -> IdDz {reject}
     "Int2String" -> IdDz {reject}
     "Consts2SMTLib" -> IdDz {reject}
     "true" -> IdDz {reject}
@@ -548,7 +546,6 @@ lexical syntax
     "or" -> IdDz {reject}
     "rtrim" -> IdDz {reject}
     "inKList" -> IdDz {reject}
-    "int" -> IdDz {reject}
     "andBool" -> IdDz {reject}
     "spawn" -> IdDz {reject}
     "isVariable" -> IdDz {reject}
@@ -597,7 +594,6 @@ lexical restrictions
     "replace" -/- [A].[l].[l]
     "==" -/- [F].[l].[o].[a].[t]
     "=" -/- [S].[e].[t]
-    "%" -/- [I].[n].[t]
     "in" -/- [K].[L].[i].[s].[t]
     "replace" -/- [F].[i].[r].[s].[t]
     "Set2KTerm" -/- [A].[c].[c]
@@ -633,7 +629,6 @@ lexical restrictions
     "#freshSym" -/- [S].[o].[r].[t].[N]
     "==" -/- [L].[i].[s].[t]
     "=" -/- [K]
-    "%" -/- [F].[l].[o].[a].[t]
     "#" -/- [E].[O].[F]
     "#substitutePlain" -/- [L].[i].[s].[t]
     ">=" -/- [S].[t].[r].[i].[n].[g]
@@ -675,7 +670,6 @@ lexical syntax
     "!" -> DzStringDz {reject}
     "#" -> DzStringDz {reject}
     "checkSat" -> DzStringDz {reject}
-    "%" -> DzStringDz {reject}
     "#fi" -> DzStringDz {reject}
     "(" -> DzStringDz {reject}
     ")" -> DzStringDz {reject}
@@ -819,6 +813,7 @@ lexical syntax
     "isSet" -> DzStringDz {reject}
     "in" -> DzStringDz {reject}
     "<<Int" -> DzStringDz {reject}
+    "var" -> DzStringDz {reject}
     "#EBADF" -> DzStringDz {reject}
     "Float2String" -> DzStringDz {reject}
     "decomposeMatching" -> DzStringDz {reject}
@@ -867,6 +862,7 @@ lexical syntax
     "impliesBool" -> DzStringDz {reject}
     "SMTLibQuery" -> DzStringDz {reject}
     "andThenBool" -> DzStringDz {reject}
+    "return" -> DzStringDz {reject}
     "#rebind2" -> DzStringDz {reject}
     "#ENOENT" -> DzStringDz {reject}
     "#rebind1" -> DzStringDz {reject}
@@ -889,7 +885,6 @@ lexical syntax
     "countAllOccurences" -> DzStringDz {reject}
     "==" -> DzStringDz {reject}
     "KLabel2KLabel" -> DzStringDz {reject}
-    "read" -> DzStringDz {reject}
     "#freshSym" -> DzStringDz {reject}
     "Int2String" -> DzStringDz {reject}
     "#substituteFV" -> DzStringDz {reject}
@@ -933,7 +928,6 @@ lexical syntax
     "|Int" -> DzStringDz {reject}
     "*Float" -> DzStringDz {reject}
     "inKList" -> DzStringDz {reject}
-    "int" -> DzStringDz {reject}
     "<Float" -> DzStringDz {reject}
     "andBool" -> DzStringDz {reject}
     "spawn" -> DzStringDz {reject}
@@ -960,7 +954,6 @@ lexical syntax
     "!" -> IdDz {reject}
     "#" -> IdDz {reject}
     "checkSat" -> IdDz {reject}
-    "%" -> IdDz {reject}
     "#fi" -> IdDz {reject}
     "(" -> IdDz {reject}
     ")" -> IdDz {reject}
@@ -1104,6 +1097,7 @@ lexical syntax
     "isSet" -> IdDz {reject}
     "in" -> IdDz {reject}
     "<<Int" -> IdDz {reject}
+    "var" -> IdDz {reject}
     "#EBADF" -> IdDz {reject}
     "Float2String" -> IdDz {reject}
     "decomposeMatching" -> IdDz {reject}
@@ -1152,6 +1146,7 @@ lexical syntax
     "impliesBool" -> IdDz {reject}
     "SMTLibQuery" -> IdDz {reject}
     "andThenBool" -> IdDz {reject}
+    "return" -> IdDz {reject}
     "#rebind2" -> IdDz {reject}
     "#ENOENT" -> IdDz {reject}
     "#rebind1" -> IdDz {reject}
@@ -1174,7 +1169,6 @@ lexical syntax
     "countAllOccurences" -> IdDz {reject}
     "==" -> IdDz {reject}
     "KLabel2KLabel" -> IdDz {reject}
-    "read" -> IdDz {reject}
     "#freshSym" -> IdDz {reject}
     "Int2String" -> IdDz {reject}
     "#substituteFV" -> IdDz {reject}
@@ -1218,7 +1212,6 @@ lexical syntax
     "|Int" -> IdDz {reject}
     "*Float" -> IdDz {reject}
     "inKList" -> IdDz {reject}
-    "int" -> IdDz {reject}
     "<Float" -> IdDz {reject}
     "andBool" -> IdDz {reject}
     "spawn" -> IdDz {reject}
@@ -1245,7 +1238,6 @@ lexical syntax
     "!" -> DzIntDz {reject}
     "#" -> DzIntDz {reject}
     "checkSat" -> DzIntDz {reject}
-    "%" -> DzIntDz {reject}
     "#fi" -> DzIntDz {reject}
     "(" -> DzIntDz {reject}
     ")" -> DzIntDz {reject}
@@ -1389,6 +1381,7 @@ lexical syntax
     "isSet" -> DzIntDz {reject}
     "in" -> DzIntDz {reject}
     "<<Int" -> DzIntDz {reject}
+    "var" -> DzIntDz {reject}
     "#EBADF" -> DzIntDz {reject}
     "Float2String" -> DzIntDz {reject}
     "decomposeMatching" -> DzIntDz {reject}
@@ -1437,6 +1430,7 @@ lexical syntax
     "impliesBool" -> DzIntDz {reject}
     "SMTLibQuery" -> DzIntDz {reject}
     "andThenBool" -> DzIntDz {reject}
+    "return" -> DzIntDz {reject}
     "#rebind2" -> DzIntDz {reject}
     "#ENOENT" -> DzIntDz {reject}
     "#rebind1" -> DzIntDz {reject}
@@ -1459,7 +1453,6 @@ lexical syntax
     "countAllOccurences" -> DzIntDz {reject}
     "==" -> DzIntDz {reject}
     "KLabel2KLabel" -> DzIntDz {reject}
-    "read" -> DzIntDz {reject}
     "#freshSym" -> DzIntDz {reject}
     "Int2String" -> DzIntDz {reject}
     "#substituteFV" -> DzIntDz {reject}
@@ -1503,7 +1496,6 @@ lexical syntax
     "|Int" -> DzIntDz {reject}
     "*Float" -> DzIntDz {reject}
     "inKList" -> DzIntDz {reject}
-    "int" -> DzIntDz {reject}
     "<Float" -> DzIntDz {reject}
     "andBool" -> DzIntDz {reject}
     "spawn" -> DzIntDz {reject}
@@ -1530,7 +1522,6 @@ lexical syntax
     "!" -> DzFloatDz {reject}
     "#" -> DzFloatDz {reject}
     "checkSat" -> DzFloatDz {reject}
-    "%" -> DzFloatDz {reject}
     "#fi" -> DzFloatDz {reject}
     "(" -> DzFloatDz {reject}
     ")" -> DzFloatDz {reject}
@@ -1674,6 +1665,7 @@ lexical syntax
     "isSet" -> DzFloatDz {reject}
     "in" -> DzFloatDz {reject}
     "<<Int" -> DzFloatDz {reject}
+    "var" -> DzFloatDz {reject}
     "#EBADF" -> DzFloatDz {reject}
     "Float2String" -> DzFloatDz {reject}
     "decomposeMatching" -> DzFloatDz {reject}
@@ -1722,6 +1714,7 @@ lexical syntax
     "impliesBool" -> DzFloatDz {reject}
     "SMTLibQuery" -> DzFloatDz {reject}
     "andThenBool" -> DzFloatDz {reject}
+    "return" -> DzFloatDz {reject}
     "#rebind2" -> DzFloatDz {reject}
     "#ENOENT" -> DzFloatDz {reject}
     "#rebind1" -> DzFloatDz {reject}
@@ -1744,7 +1737,6 @@ lexical syntax
     "countAllOccurences" -> DzFloatDz {reject}
     "==" -> DzFloatDz {reject}
     "KLabel2KLabel" -> DzFloatDz {reject}
-    "read" -> DzFloatDz {reject}
     "#freshSym" -> DzFloatDz {reject}
     "Int2String" -> DzFloatDz {reject}
     "#substituteFV" -> DzFloatDz {reject}
@@ -1788,7 +1780,6 @@ lexical syntax
     "|Int" -> DzFloatDz {reject}
     "*Float" -> DzFloatDz {reject}
     "inKList" -> DzFloatDz {reject}
-    "int" -> DzFloatDz {reject}
     "<Float" -> DzFloatDz {reject}
     "andBool" -> DzFloatDz {reject}
     "spawn" -> DzFloatDz {reject}

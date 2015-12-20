@@ -1,14 +1,25 @@
-semaphore pmutex;
+semaphore mutex;
 
-var x;
-x=read();
+int x, i;
+x = read();
+i = 0;
 
-spawn { 
+spawn {
+	lock mutex; 
 	x = x * 2; 
-	};
+	unlock mutex;
+}
 
 spawn { 
-	x=x+10; 
-	};
+	lock mutex;
+	x = x+10; 
+	unlock mutex;
+}
+
+lock mutex;
+
+x = 99;
+
+unlock mutex;
 
 print(x);

@@ -1,10 +1,52 @@
-module Program
+module Integration
 
 imports Common
+imports KTechnique
 imports KBuiltinsBasic
+
+imports Variables
+
 exports
 
 context-free syntax
+context-free priorities
+{
+    "notBool" Bool -> Bool {cons("Bool10Syn")}
+} > {
+    Bool "andBool" Bool -> Bool {left, cons("Bool12Syn")}
+    Bool "andThenBool" Bool -> Bool {left, cons("Bool13Syn")}
+} > {
+    Bool "xorBool" Bool -> Bool {left, cons("Bool14Syn")}
+} > {
+    Bool "orBool" Bool -> Bool {left, cons("Bool15Syn")}
+    Bool "orElseBool" Bool -> Bool {left, cons("Bool16Syn")}
+} > {
+    Bool "impliesBool" Bool -> Bool {left, cons("Bool17Syn")}
+} > { left:
+    Bool "==Bool" Bool -> Bool {left, cons("Bool18Syn")}
+    Bool "=/=Bool" Bool -> Bool {left, cons("Bool19Syn")}
+}
+
+context-free priorities
+{ left:
+    K "==K" K -> Bool {left, cons("Bool120Syn")}
+    K "=/=K" K -> Bool {left, cons("Bool122Syn")}
+}
+
+context-free priorities
+{
+    K "==K" K -> Bool {left, cons("Bool120Syn")}
+    K "=/=K" K -> Bool {left, cons("Bool122Syn")}
+} > {
+    Bool "impliesBool" Bool -> Bool {left, cons("Bool17Syn")}
+    Bool "orBool" Bool -> Bool {left, cons("Bool15Syn")}
+    "notBool" Bool -> Bool {cons("Bool10Syn")}
+    Bool "xorBool" Bool -> Bool {left, cons("Bool14Syn")}
+    Bool "orElseBool" Bool -> Bool {left, cons("Bool16Syn")}
+    Bool "andBool" Bool -> Bool {left, cons("Bool12Syn")}
+    Bool "andThenBool" Bool -> Bool {left, cons("Bool13Syn")}
+}
+
 context-free priorities
 {
     "~Int" Int -> Int {cons("Int149Syn")}
@@ -28,24 +70,6 @@ context-free priorities
     Int "xorInt" Int -> Int {left, cons("Int162Syn")}
 } > { left:
     Int "|Int" Int -> Int {left, cons("Int163Syn")}
-}
-
-context-free priorities
-{
-    "notBool" Bool -> Bool {cons("Bool10Syn")}
-} > {
-    Bool "andBool" Bool -> Bool {left, cons("Bool12Syn")}
-    Bool "andThenBool" Bool -> Bool {left, cons("Bool13Syn")}
-} > {
-    Bool "xorBool" Bool -> Bool {left, cons("Bool14Syn")}
-} > {
-    Bool "orBool" Bool -> Bool {left, cons("Bool15Syn")}
-    Bool "orElseBool" Bool -> Bool {left, cons("Bool16Syn")}
-} > {
-    Bool "impliesBool" Bool -> Bool {left, cons("Bool17Syn")}
-} > { left:
-    Bool "==Bool" Bool -> Bool {left, cons("Bool18Syn")}
-    Bool "=/=Bool" Bool -> Bool {left, cons("Bool19Syn")}
 }
 
 context-free priorities
@@ -75,116 +99,318 @@ context-free priorities
 }
 
 context-free priorities
-{ left:
-    K "==K" K -> Bool {left, cons("Bool120Syn")}
-    K "=/=K" K -> Bool {left, cons("Bool122Syn")}
-}
-
-context-free priorities
 {
-    K "==K" K -> Bool {left, cons("Bool120Syn")}
-    K "=/=K" K -> Bool {left, cons("Bool122Syn")}
+    K "|->" K -> MyMap {cons("MyMap1455Syn")}
 } > {
-    Bool "impliesBool" Bool -> Bool {left, cons("Bool17Syn")}
-    Bool "orBool" Bool -> Bool {left, cons("Bool15Syn")}
-    "notBool" Bool -> Bool {cons("Bool10Syn")}
-    Bool "xorBool" Bool -> Bool {left, cons("Bool14Syn")}
-    Bool "orElseBool" Bool -> Bool {left, cons("Bool16Syn")}
-    Bool "andBool" Bool -> Bool {left, cons("Bool12Syn")}
-    Bool "andThenBool" Bool -> Bool {left, cons("Bool13Syn")}
+    MyMap "," MyMap -> MyMap {left, cons("MyMap1453Syn")}
 }
 
 context-free priorities
 {
     Int -> AExp {}
     Id -> AExp {}
-    "-" AExp -> AExp {cons("AExp1473Syn")}
+    AExp "/" AExp -> AExp {left, cons("AExp1473Syn")}
+    AExp "*" AExp -> AExp {left, cons("AExp1474Syn")}
 } > {
-    AExp "/" AExp -> AExp {left, cons("AExp1475Syn")}
-    AExp "*" AExp -> AExp {left, cons("AExp1476Syn")}
-    AExp "%" AExp -> AExp {left, cons("AExp1477Syn")}
-} > {
-    AExp "+" AExp -> AExp {left, cons("AExp1478Syn")}
-    AExp "-" AExp -> AExp {left, cons("AExp1479Syn")}
+    AExp "+" AExp -> AExp {left, cons("AExp1475Syn")}
+    AExp "-" AExp -> AExp {left, cons("AExp1476Syn")}
 }
 
 context-free priorities
 {
     Bool -> BExp {}
-    AExp "<" AExp -> BExp {non-assoc, cons("BExp1480Syn")}
-    AExp "<=" AExp -> BExp {non-assoc, cons("BExp1482Syn")}
-    AExp ">" AExp -> BExp {non-assoc, cons("BExp1483Syn")}
-    AExp ">=" AExp -> BExp {non-assoc, cons("BExp1484Syn")}
-    AExp "==" AExp -> BExp {non-assoc, cons("BExp1485Syn")}
-    AExp "!=" AExp -> BExp {non-assoc, cons("BExp1486Syn")}
-    "!" BExp -> BExp {cons("BExp1487Syn")}
+    AExp "<" AExp -> BExp {non-assoc, cons("BExp1477Syn")}
+    AExp "<=" AExp -> BExp {non-assoc, cons("BExp1478Syn")}
+    AExp ">" AExp -> BExp {non-assoc, cons("BExp1479Syn")}
+    AExp ">=" AExp -> BExp {non-assoc, cons("BExp1480Syn")}
+    AExp "==" AExp -> BExp {non-assoc, cons("BExp1482Syn")}
+    AExp "!=" AExp -> BExp {non-assoc, cons("BExp1483Syn")}
+    "!" BExp -> BExp {cons("BExp1484Syn")}
 } > {
-    BExp "and" BExp -> BExp {left, cons("BExp1488Syn")}
-    BExp "or" BExp -> BExp {left, cons("BExp1489Syn")}
+    BExp "and" BExp -> BExp {left, cons("BExp1485Syn")}
+    BExp "or" BExp -> BExp {left, cons("BExp1486Syn")}
 }
 
-context-free start-symbols
-Val AExp Variable Set Stmts K String KList Int Stmt Bool Char Ids TCPAnswer DzInt DzString DzBool BExp Bag Ddecl KResult TCPError KLabel Float Block Id Exp Map KItem DzFloat K
+%% subsorts 1
+context-free priorities
+{
+    Nat -> K
+    Val -> K
+    AExp -> K
+    Variable -> K
+    MySet -> K
+    Stmts -> K
+    MyMap -> K
+    String -> K
+    Int -> K
+    Stmt -> K
+    Bool -> K
+    Char -> K
+    Ids -> K
+    Stream -> K
+    TCPAnswer -> K
+    DzInt -> K
+    DzString -> K
+    DzBool -> K
+    BExp -> K
+    MyBag -> K
+    Ddecl -> K
+    TCPError -> K
+    Float -> K
+    MyList -> K
+    Block -> K
+    Id -> K
+    Exp -> K
+    DzFloat -> K
+} .> {
+    DzFloat -> Float
+    TCPError -> TCPAnswer
+    Id -> Variable
+    DzInt -> Int
+    Id -> AExp
+    Block -> Stmt
+    String -> Val
+    DzString -> String
+    Bool -> Val
+    String -> TCPAnswer
+    Id -> Ids
+    Int -> Val
+    Int -> AExp
+    Ddecl -> Stmt
+    DzBool -> Bool
+    Bool -> BExp
+    Stmt -> Stmts
+    Val -> Exp
+} .> {
+    K -> Nat
+    K -> Val
+    K -> AExp
+    K -> Variable
+    K -> MySet
+    K -> Stmts
+    K -> MyMap
+    K -> String
+    K -> Int
+    K -> Stmt
+    K -> Bool
+    K -> Char
+    K -> Ids
+    K -> Stream
+    K -> TCPAnswer
+    K -> DzInt
+    K -> DzString
+    K -> DzBool
+    K -> BExp
+    K -> MyBag
+    K -> Ddecl
+    K -> TCPError
+    K -> Float
+    K -> MyList
+    K -> Block
+    K -> Id
+    K -> Exp
+    K -> DzFloat
+}
+
+%% subsorts 1a
+context-free priorities
+{
+    Nat -> K
+    Val -> K
+    AExp -> K
+    Variable -> K
+    MySet -> K
+    Stmts -> K
+    MyMap -> K
+    String -> K
+    Int -> K
+    Stmt -> K
+    Bool -> K
+    Char -> K
+    Ids -> K
+    Stream -> K
+    TCPAnswer -> K
+    DzInt -> K
+    DzString -> K
+    DzBool -> K
+    BExp -> K
+    MyBag -> K
+    Ddecl -> K
+    TCPError -> K
+    Float -> K
+    MyList -> K
+    Block -> K
+    Id -> K
+    Exp -> K
+    DzFloat -> K
+} .> {
+    K -> Nat
+    K -> Val
+    K -> AExp
+    K -> Variable
+    K -> MySet
+    K -> Stmts
+    K -> MyMap
+    K -> String
+    K -> Int
+    K -> Stmt
+    K -> Bool
+    K -> Char
+    K -> Ids
+    K -> Stream
+    K -> TCPAnswer
+    K -> DzInt
+    K -> DzString
+    K -> DzBool
+    K -> BExp
+    K -> MyBag
+    K -> Ddecl
+    K -> TCPError
+    K -> Float
+    K -> MyList
+    K -> Block
+    K -> Id
+    K -> Exp
+    K -> DzFloat
+}
+
+%% subsorts 2
+context-free priorities
+{
+    K -> Nat
+    K -> Val
+    K -> AExp
+    K -> Variable
+    K -> MySet
+    K -> Stmts
+    K -> MyMap
+    K -> String
+    K -> Int
+    K -> Stmt
+    K -> Bool
+    K -> Char
+    K -> Ids
+    K -> Stream
+    K -> TCPAnswer
+    K -> DzInt
+    K -> DzString
+    K -> DzBool
+    K -> BExp
+    K -> MyBag
+    K -> Ddecl
+    K -> TCPError
+    K -> Float
+    K -> MyList
+    K -> Block
+    K -> Id
+    K -> Exp
+    K -> DzFloat
+} .> {
+    Nat -> K
+    Val -> K
+    AExp -> K
+    Variable -> K
+    MySet -> K
+    Stmts -> K
+    MyMap -> K
+    String -> K
+    Int -> K
+    Stmt -> K
+    Bool -> K
+    Char -> K
+    Ids -> K
+    Stream -> K
+    TCPAnswer -> K
+    DzInt -> K
+    DzString -> K
+    DzBool -> K
+    BExp -> K
+    MyBag -> K
+    Ddecl -> K
+    TCPError -> K
+    Float -> K
+    MyList -> K
+    Block -> K
+    Id -> K
+    Exp -> K
+    DzFloat -> K
+}
 context-free syntax
     "isVariable" "(" InsertDzMap ")" -> Bool {cons("Bool1386Syn")}
     "#binderSplit" "(" InsertDzK ")" -> K {cons("K1336Syn")}
     K "[" InsertDzKList "/" InsertDzKList "]" -> K {cons("K1349Syn")}
-    AExp -> Exp {}
+    "String2K" "(" InsertDzString ")" -> K {cons("K1435Syn")}
     "#patternMatch" "(" InsertDzKList "," InsertDzKList ")" -> K {cons("K1308Syn")}
-    Exp ";" -> Stmt {cons("Stmt1492Syn")}
+    Exp ";" -> Stmt {cons("Stmt1490Syn")}
     "#freshSubst1" "(" InsertDzSet "," InsertDzSet "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1367Syn")}
     "ordChar" "(" InsertDzString ")" -> Int {cons("Int198Syn")}
     Map "<=Map" Map -> Bool {cons("Bool130Syn")}
+    "#ioError" "(" InsertDzString ")" -> K {cons("K1409Syn")}
+    "size" "(" InsertDzMyBag ")" -> Int {cons("Int1444Syn")}
     "SMTLibQuery" "(" InsertDzBool ")" -> String {cons("String1379Syn")}
     "Vars2SMTLib" "(" InsertDzSet ")" -> String {cons("String1377Syn")}
     String "=/=String" String -> Bool {left, cons("Bool1228Syn")}
     "#getSymLabel" "(" InsertDzString ")" -> K {cons("K1394Syn")}
+    "#putc" "(" InsertDzInt "," InsertDzInt ")" -> K {cons("K1407Syn")}
     "#EOF" -> TCPError {cons("TCPError1245Syn")}
+    "#tell" "(" InsertDzInt ")" -> KItem {cons("KItem1402Syn")}
     "forall" InsertDzSet "." Bool -> Bool {cons("Bool1374Syn")}
     String "<String" String -> Bool {cons("Bool1229Syn")}
-    Map "(" InsertDzK ")" -> K {cons("K1269Syn")}
     "String2Char" "(" InsertDzString ")" -> Char {cons("Char1237Syn")}
+    Map "(" InsertDzK ")" -> K {cons("K1269Syn")}
     "#map" "(" InsertDzMap ")" -> K {cons("K1278Syn")}
     "isSymbolicBag" "(" InsertDzBag ")" -> K {cons("K1392Syn")}
-    "if" "(" InsertDzBExp ")" Block -> Stmt {cons("Stmt1495Syn")}
     "getMatching" "(" InsertDzKList "," InsertDzKList ")" -> Map {cons("Map1306Syn")}
     "intersectSet" "(" InsertDzSet "," InsertDzSet ")" -> Set {cons("Set1286Syn")}
     "#substitutePlainList" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1369Syn")}
-    Bool -> Val {}
     "#freeVarsSet" "(" InsertDzSet ")" -> K {cons("K1342Syn")}
+    Bool -> Val {}
+    "#istream" "(" InsertDzInt ")" -> Stream {cons("Stream1InputStreamSyn")}
     String "<=String" String -> Bool {cons("Bool1230Syn")}
     String ">=String" String -> Bool {cons("Bool1233Syn")}
-    "#hasMapping" "(" InsertDzMap "," InsertDzK ")" -> Bool {cons("Bool1277Syn")}
+    "MyBagItem" "(" InsertDzK ")" -> MyBag {cons("MyBag1442Syn")}
     "Int2Float" "(" InsertDzInt ")" -> Float {cons("Float192Syn")}
+    "#hasMapping" "(" InsertDzMap "," InsertDzK ")" -> Bool {cons("Bool1277Syn")}
+    "values" "(" InsertDzMyMap ")" -> MyBag {cons("MyBag1463Syn")}
     "Map2KLabel" Map -> KLabel {cons("KLabel1298Syn")}
+    "keys" "(" InsertDzMyMap ")" -> MySet {cons("MySet1462Syn")}
+    "#read" "(" InsertDzInt "," InsertDzInt ")" -> KItem {cons("KItem1404Syn")}
     "replace" "(" InsertDzString "," InsertDzString "," InsertDzString "," InsertDzInt ")" -> String {cons("String1222Syn")}
     "#isWhiteSpace" "(" InsertDzString ")" -> Bool {cons("Bool1238Syn")}
     "#parseToken" "(" InsertDzString "," InsertDzString ")" -> K {cons("K1240Syn")}
+    "if" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1494Syn")}
     "#freshVar1" "(" InsertDzSet "," InsertDzK ")" -> K {cons("K1327Syn")}
+    "#ostream" "(" InsertDzInt ")" -> Stream {cons("Stream1OutputStreamSyn")}
+    "MyMapOf" "(" InsertDzKList "," InsertDzKList ")" -> MyMap {cons("MyMap1456Syn")}
+    "#statTypes" "(" InsertDzKList ")" -> KList {cons("KList1433Syn")}
     "#substituteK" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1352Syn")}
     "maxInt" "(" InsertDzInt "," InsertDzInt ")" -> Int {cons("Int165Syn")}
     "values" Map -> Set {cons("Set1275Syn")}
     "#substitutePlainList1" "(" InsertDzK "," InsertDzMap "," InsertDzKList ")" -> K {cons("K1370Syn")}
     K "#inKList" KList -> Bool {cons("Bool1268Syn")}
+    "#string2Int" "(" InsertDzK ")" -> K {cons("K1430Syn")}
+    "update" "(" InsertDzMyMap "," InsertDzMyMap ")" -> MyMap {cons("MyMap1459Syn")}
     Set "=Set" Set -> Bool {cons("Bool144Syn")}
-    "freeVariables" "(" InsertDzSet ")" -> Set {cons("Set1340Syn")}
     KLabel "==KLabel" KLabel -> Bool {cons("Bool137Syn")}
+    "freeVariables" "(" InsertDzSet ")" -> Set {cons("Set1340Syn")}
     "#patternMatch1" "(" InsertDzKList "," InsertDzMap ")" -> K {cons("K1309Syn")}
-    "read" "(" ")" -> AExp {cons("AExp1474Syn")}
+    "#stdin" -> Int {cons("Int1427Syn")}
     "SMTCall" "(" InsertDzString ")" -> String {cons("String1380Syn")}
     "#substitute" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1353Syn")}
     List "=/=List" List -> Bool {cons("Bool140Syn")}
-    BExp -> Exp {}
     "#binderSplit1" "(" InsertDzKLabel "," InsertDzInt "," InsertDzKList "," InsertDzKList "," InsertDzKList "," InsertDzSet ")" -> K {cons("K1337Syn")}
     "#freshSymN" "(" InsertDzK "," InsertDzInt ")" -> K {cons("K1397Syn")}
+    "#stderr" -> Int {cons("Int1429Syn")}
     "$hasMapping" "(" InsertDzMap "," InsertDzK ")" -> Bool {cons("Bool1276Syn")}
     "lengthList" List -> Int {cons("Int1290Syn")}
     KList "=/=KList" KList -> Bool {cons("Bool136Syn")}
     "isBuiltin" "(" InsertDzK ")" -> Bool {cons("Bool1304Syn")}
-    "{" InsertDzStmts "}" -> Block {cons("Block1502Syn")}
-    Val -> KResult {}
+    "{" InsertDzStmts "}" -> Block {cons("Block1488Syn")}
+    MySet "," MySet -> MySet {left, cons("MySet1445Syn")}
     Map "[" InsertDzMap "]" -> Map {cons("Map1UpdateMapWithMapSyn")}
     "#isMapInK" "(" InsertDzK ")" -> Bool {cons("Bool1279Syn")}
+    MyMap "[" InsertDzK "<-" InsertDzK "]" -> MyMap {cons("MyMap1458Syn")}
+    "#opendir" "(" InsertDzString ")" -> KList {cons("KList1423Syn")}
     "#substituteFV" "(" InsertDzK "," InsertDzMap "," InsertDzK ")" -> K {cons("K1354Syn")}
     "#eval" Map -> Bag {cons("Bag1EvalSyn")}
     "trim" "(" InsertDzString ")" -> String {cons("String1225Syn")}
@@ -193,14 +419,14 @@ context-free syntax
     Map "==Map" Map -> Bool {cons("Bool132Syn")}
     Int "<Int" Int -> Bool {left, cons("Bool168Syn")}
     "#EISDIR" -> TCPError {cons("TCPError1256Syn")}
-    "isLocalFreshVar" "(" InsertDzK ")" -> Bool {cons("Bool1328Syn")}
     "KLabel2KLabel" KLabel -> KLabel {cons("KLabel1292Syn")}
+    "isLocalFreshVar" "(" InsertDzK ")" -> Bool {cons("Bool1328Syn")}
     Id -> Variable {}
     DzInt -> Int {}
     K "[" InsertDzMap "]" -> K {cons("K1350Syn")}
-    "while" "(" InsertDzBExp ")" Block -> Stmt {cons("Stmt1496Syn")}
     KList "=KList" KList -> Bool {cons("Bool147Syn")}
     "#isDigit" "(" InsertDzString ")" -> Bool {cons("Bool1239Syn")}
+    "String2Bool" "(" InsertDzTCPAnswer ")" -> Bool {cons("Bool1426Syn")}
     Int "dividesInt" Int -> Bool {cons("Bool175Syn")}
     "countAllOccurences" "(" InsertDzString "," InsertDzString ")" -> Int {cons("Int1224Syn")}
     "Bag2KLabel" Bag -> KLabel {cons("KLabel1295Syn")}
@@ -209,30 +435,36 @@ context-free syntax
     "#ESPIPE" -> TCPError {cons("TCPError1255Syn")}
     "#rebind" "(" InsertDzK "," InsertDzK "," InsertDzK "," InsertDzK ")" -> K {cons("K1362Syn")}
     "lengthString" "(" InsertDzString ")" -> Int {cons("Int196Syn")}
+    ".MyBag" -> MyBag {cons("MyBag1440Syn")}
+    MyMap "," MyMap -> MyMap {left, cons("MyMap1453Syn")}
     "KList2KLabel" KList -> KLabel {cons("KLabel1294Syn")}
     "#counter" -> Int {cons("Int1266Syn")}
     "findChar" "(" InsertDzString "," InsertDzString "," InsertDzInt ")" -> Int {cons("Int1203Syn")}
     "unlock" InsertDzId ";" -> Stmt {cons("Stmt1499Syn")}
-    K "inKList" KList -> Bool {cons("Bool1267Syn")}
+    MyMap "[" InsertDzK "<-" "undef" "]" -> MyMap {cons("MyMap1460Syn")}
     String -> TCPAnswer {}
+    K "inKList" KList -> Bool {cons("Bool1267Syn")}
     "#substituteKArrow" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1357Syn")}
-    "{" "}" -> Block {cons("Block1500Syn")}
-    "(" InsertDzAExp ")" -> AExp {cons("AExp1Bracket")}
+    "#noIO" -> Stream {cons("Stream1434Syn")}
+    "{" "}" -> Block {cons("Block1487Syn")}
     "rtrim" "(" InsertDzString ")" -> String {cons("String1227Syn")}
     "isBounding" "(" InsertDzKLabel "," InsertDzInt ")" -> Bool {cons("Bool1330Syn")}
     "#ENOTDIR" -> TCPError {cons("TCPError1249Syn")}
     "String2Id" "(" InsertDzString ")" -> Id {cons("Id1244Syn")}
     "#freshSym" "(" InsertDzK ")" -> K {cons("K1398Syn")}
     "#ENOENT" -> TCPError {cons("TCPError1248Syn")}
-    "checkSat" "(" InsertDzBool ")" -> String {cons("String1382Syn")}
+    "size" "(" InsertDzMyMap ")" -> Int {cons("Int1464Syn")}
     "#ELOOP" -> TCPError {cons("TCPError1252Syn")}
+    "checkSat" "(" InsertDzBool ")" -> String {cons("String1382Syn")}
     "#rebind2" "(" InsertDzK "," InsertDzInt "," InsertDzMap "," InsertDzK ")" -> K {cons("K1366Syn")}
+    "size" "(" InsertDzMyList ")" -> Int {cons("Int1469Syn")}
     "#isTCPError" "(" InsertDzString ")" -> Bool {cons("Bool1263Syn")}
     "#freezer" K -> KLabel {cons("KLabel1302Syn")}
     "isEmptySet" "(" InsertDzSet ")" -> Bool {cons("Bool1287Syn")}
     "replaceAll" "(" InsertDzString "," InsertDzString "," InsertDzString ")" -> String {cons("String1220Syn")}
     Int -> Val {}
     "#substituteBinder" "(" InsertDzK "," InsertDzMap "," InsertDzK ")" -> K {cons("K1358Syn")}
+    "#write" "(" InsertDzInt "," InsertDzString ")" -> K {cons("K1408Syn")}
     "lock" InsertDzId ";" -> Stmt {cons("Stmt1498Syn")}
     "#substitutePlain" "(" InsertDzK "," InsertDzMap ")" -> K {cons("K1368Syn")}
     "chrChar" "(" InsertDzInt ")" -> String {cons("String197Syn")}
@@ -242,26 +474,37 @@ context-free syntax
     "directionalityChar" "(" InsertDzString ")" -> String {cons("String1235Syn")}
     "KLabel2String" "(" InsertDzKLabel ")" -> String {cons("String1209Syn")}
     List "=List" List -> Bool {cons("Bool143Syn")}
+    "var" InsertDzIds ";" -> Ddecl {cons("Ddecl1470Syn")}
+    "#lstat" "(" InsertDzString ")" -> KList {cons("KList1422Syn")}
     "#getVarsFromK" "(" InsertDzK ")" -> Set {cons("Set1322Syn")}
     "#distinctCounter" "(" InsertDzInt ")" -> Int {cons("Int1265Syn")}
+    "#getc" "(" InsertDzInt ")" -> KItem {cons("KItem1403Syn")}
     "isMatching" "(" InsertDzKList "," InsertDzKList ")" -> Bool {cons("Bool1305Syn")}
     Ddecl -> Stmt {}
-    Stmts Stmts -> Stmts {right, cons("Stmts1503Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1500Syn")}
+    Val -> Exp {}
     Map "[" InsertDzKList "/" InsertDzKList "]" -> Map {cons("Map1273Syn")}
     "#tcpRequest" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1258Syn")}
+    ".MyList" -> MyList {cons("MyList1466Syn")}
     "CellLabel2KLabel" CellLabel -> KLabel {cons("KLabel1293Syn")}
     "#EBADF" -> TCPError {cons("TCPError1254Syn")}
     "#substituteList1" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzKList ")" -> K {cons("K1356Syn")}
+    "String2DotK" "(" InsertDzTCPAnswer ")" -> K {cons("K1425Syn")}
+    String -> Val {}
     "isToken" "(" InsertDzK ")" -> Bool {cons("Bool1303Syn")}
     K "inVars" K -> Bool {cons("Bool1333Syn")}
-    "getVariables" "(" InsertDzK ")" -> Set {cons("Set1323Syn")}
+    "#open" "(" InsertDzString "," InsertDzString ")" -> KItem {cons("KItem1400Syn")}
+    ".MySet" -> MySet {cons("MySet1446Syn")}
     List "==List" List -> Bool {cons("Bool139Syn")}
+    "getVariables" "(" InsertDzK ")" -> Set {cons("Set1323Syn")}
+    ".MyMap" -> MyMap {cons("MyMap1454Syn")}
     Map "=/=Map" Map -> Bool {cons("Bool133Syn")}
-    "#rebind1" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1365Syn")}
     Set "<=Set" Set -> Bool {cons("Bool127Syn")}
+    "#rebind1" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1365Syn")}
     Int "=Int" Int -> Bool {cons("Bool174Syn")}
-    "Consts2SMTLib" "(" InsertDzSet ")" -> String {cons("String1378Syn")}
     "fresh" "(" InsertDzK ")" -> Bool {cons("Bool1FreshSyn")}
+    "Consts2SMTLib" "(" InsertDzSet ")" -> String {cons("String1378Syn")}
+    "return" InsertDzExp ";" -> Stmt {cons("Stmt1496Syn")}
     "#evalHelper" Map -> Bag {cons("Bag1EvalHelperSyn")}
     "#ENAMETOOLONG" -> TCPError {cons("TCPError1253Syn")}
     "absInt" "(" InsertDzInt ")" -> Int {cons("Int166Syn")}
@@ -276,29 +519,39 @@ context-free syntax
     "isVariable" "(" InsertDzSet ")" -> Bool {cons("Bool1384Syn")}
     Int "=/=Int" Int -> Bool {left, cons("Bool173Syn")}
     "#getMapFromK" "(" InsertDzK ")" -> Map {cons("Map1280Syn")}
+    "#close" "(" InsertDzInt ")" -> K {cons("K1405Syn")}
     SetItem "in" Set -> Bool {cons("Bool1284Syn")}
     Int ">Int" Int -> Bool {left, cons("Bool170Syn")}
     "keys" Map -> Set {cons("Set1274Syn")}
+    "MySetItem" "(" InsertDzK ")" -> MySet {cons("MySet1447Syn")}
     "rfindString" "(" InsertDzString "," InsertDzString "," InsertDzInt ")" -> Int {cons("Int1202Syn")}
     "#getVars" "(" InsertDzK ")" -> K {cons("K1324Syn")}
-    "#freeVarsBinder" "(" InsertDzK "," InsertDzSet ")" -> K {cons("K1346Syn")}
     "#EINVAL" -> TCPError {cons("TCPError1257Syn")}
+    "#freeVarsBinder" "(" InsertDzK "," InsertDzSet ")" -> K {cons("K1346Syn")}
     "Int2String" "(" InsertDzInt ")" -> String {cons("String1208Syn")}
     "isSymbolicMap" "(" InsertDzMap ")" -> K {cons("K1393Syn")}
+    MyMap "[" InsertDzK "]" -> K {cons("K1457Syn")}
     "#if" InsertDzBool "#then" InsertDzK "#else" InsertDzK "#fi" -> K {cons("K123Syn")}
     Int "==Int" Int -> Bool {left, cons("Bool172Syn")}
     "##tcpRequest" "(" InsertDzString ")" -> String {cons("String1260Syn")}
     "K2Sort" "(" InsertDzK ")" -> String {cons("String1388Syn")}
+    "MyListItem" "(" InsertDzK ")" -> MyList {cons("MyList1467Syn")}
     K "=K" K -> Bool {cons("Bool142Syn")}
     "List2KLabel" List -> KLabel {cons("KLabel1297Syn")}
     "isVariable" "(" InsertDzBag ")" -> Bool {cons("Bool1385Syn")}
-    "spawn" Block -> Stmt {cons("Stmt1490Syn")}
+    MySet "-MySet" MySet -> MySet {cons("MySet1448Syn")}
+    "spawn" Block -> Stmt {cons("Stmt1489Syn")}
+    K "in" MyList -> Bool {cons("Bool1468Syn")}
     KLabel "=/=KLabel" KLabel -> Bool {cons("Bool138Syn")}
-    "#freshSymSort" "(" InsertDzString ")" -> K {cons("K1396Syn")}
     Bag "=Bag" Bag -> Bool {cons("Bool145Syn")}
+    "#freshSymSort" "(" InsertDzString ")" -> K {cons("K1396Syn")}
+    MyList "," MyList -> MyList {left, cons("MyList1465Syn")}
+    Map "=Map" Map -> Bool {cons("Bool146Syn")}
     Map "[" "undef" "/" InsertDzKList "]" -> Map {cons("Map1270Syn")}
     "isVariable" "(" InsertDzList ")" -> Bool {cons("Bool1383Syn")}
-    Map "=Map" Map -> Bool {cons("Bool146Syn")}
+    MyBag "," MyBag -> MyBag {cons("MyBag1439Syn")}
+    "intersectSet" "(" InsertDzMySet "," InsertDzMySet ")" -> MySet {cons("MySet1449Syn")}
+    "K2String" "(" InsertDzK ")" -> String {cons("String1437Syn")}
     "Float2Int" "(" InsertDzFloat ")" -> Int {cons("Int193Syn")}
     "#tcpError" "(" InsertDzString ")" -> TCPError {cons("TCPError1246Syn")}
     "randomRandom" "(" InsertDzInt ")" -> Int {cons("Int1264Syn")}
@@ -307,86 +560,196 @@ context-free syntax
     "String2Int" "(" InsertDzString ")" -> Int {cons("Int1207Syn")}
     "String2KLabel" "(" InsertDzString ")" -> KLabel {cons("KLabel1String2KLabelSyn")}
     "#checkTCPAnswer" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1259Syn")}
+    "if" "(" InsertDzExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1493Syn")}
     "#if" InsertDzBool "#then" InsertDzKItem "#else" InsertDzKItem "#fi" -> KItem {cons("KItem124Syn")}
     "#getVars1" "(" InsertDzKList "," InsertDzSet ")" -> K {cons("K1325Syn")}
     String "==String" String -> Bool {left, cons("Bool195Syn")}
+    "while" "(" InsertDzExp ")" Block -> Stmt {cons("Stmt1495Syn")}
     "String2Float" "(" InsertDzString ")" -> Float {cons("Float1206Syn")}
     "isSymbolicSet" "(" InsertDzSet ")" -> K {cons("K1390Syn")}
     "#substMap" "(" InsertDzMap ")" -> K {cons("K1364Syn")}
     "#retrieveTCPError" "(" InsertDzString ")" -> String {cons("String1262Syn")}
     "semaphore" InsertDzIds ";" -> Ddecl {cons("Ddecl1472Syn")}
+    K "in" MyBag -> Bool {cons("Bool1443Syn")}
     K "#inSet" Set -> Bool {cons("Bool1285Syn")}
     "Map" "(" InsertDzKList "|->" InsertDzKList ")" -> Map {cons("Map1272Syn")}
     "exists" InsertDzSet "." Bool -> Bool {cons("Bool1375Syn")}
+    "Bag2String" "(" InsertDzBag ")" -> String {cons("String1438Syn")}
+    "#parse" "(" InsertDzString "," InsertDzString ")" -> KItem {cons("KItem1424Syn")}
     TCPError -> TCPAnswer {}
     "#" K -> KLabel {cons("KLabel1300Syn")}
     "K2SMTLib" "(" InsertDzK ")" -> String {cons("String1376Syn")}
     "getKLabel" K -> KLabel {cons("KLabel1299Syn")}
-    "print" "(" InsertDzAExp ")" ";" -> Stmt {cons("Stmt1497Syn")}
+    "print" "(" InsertDzExp ")" ";" -> Stmt {cons("Stmt1497Syn")}
     "#boundVars" "(" InsertDzK ")" -> K {cons("K1334Syn")}
     Stmt -> Stmts {}
+    "#stat" "(" InsertDzString ")" -> KList {cons("KList1420Syn")}
     Set "-Set" Set -> Set {cons("Set1282Syn")}
     "#freshSubst" "(" InsertDzSet "," InsertDzSet "," InsertDzMap ")" -> K {cons("K1363Syn")}
+    "#seek" "(" InsertDzInt "," InsertDzInt ")" -> K {cons("K1406Syn")}
     "rfindChar" "(" InsertDzString "," InsertDzString "," InsertDzInt ")" -> Int {cons("Int1204Syn")}
+    "String2Bag" "(" InsertDzString ")" -> Bag {cons("Bag1436Syn")}
     Block -> Stmt {}
     Set "==Set" Set -> Bool {cons("Bool128Syn")}
     DzString -> String {}
-    "int" InsertDzIds ";" -> Ddecl {cons("Ddecl1470Syn")}
+    Id "=" InsertDzExp ";" -> Stmt {cons("Stmt1492Syn")}
     "Float2String" "(" InsertDzFloat ")" -> String {cons("String1205Syn")}
     KResult -> K {}
+    "#stdout" -> Int {cons("Int1428Syn")}
+    "size" "(" InsertDzMySet ")" -> Int {cons("Int1452Syn")}
     "isSymbolicList" "(" InsertDzList ")" -> K {cons("K1389Syn")}
-    "#freshSymSortN" "(" InsertDzString "," InsertDzInt ")" -> K {cons("K1395Syn")}
-    "#binderSplit2" "(" InsertDzKLabel "," InsertDzInt "," InsertDzKList "," InsertDzKList "," InsertDzKList "," InsertDzSet "," InsertDzK ")" -> K {cons("K1338Syn")}
     KLabel "=KLabel" KLabel -> Bool {cons("Bool148Syn")}
     "#EACCES" -> TCPError {cons("TCPError1250Syn")}
+    "#binderSplit2" "(" InsertDzKLabel "," InsertDzInt "," InsertDzKList "," InsertDzKList "," InsertDzKList "," InsertDzSet "," InsertDzK ")" -> K {cons("K1338Syn")}
+    "#freshSymSortN" "(" InsertDzString "," InsertDzInt ")" -> K {cons("K1395Syn")}
     "Set2KLabel" Set -> KLabel {cons("KLabel1296Syn")}
+    K "|->" K -> MyMap {cons("MyMap1455Syn")}
     "isBound" "(" InsertDzKLabel "," InsertDzInt ")" -> Bool {cons("Bool1329Syn")}
     String ">String" String -> Bool {cons("Bool1232Syn")}
     "#substituteBinder2" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1360Syn")}
+    "#buffer" "(" InsertDzK ")" -> Stream {cons("Stream1IOBufferSyn")}
     "#tokenToString" "(" InsertDzK ")" -> String {cons("String1242Syn")}
     "Char2String" "(" InsertDzChar ")" -> String {cons("String1236Syn")}
     "freeVariables" "(" InsertDzKList ")" -> Set {cons("Set1339Syn")}
     "freshVariables" "(" InsertDzSet "," InsertDzK ")" -> K {cons("K1372Syn")}
     "#if" InsertDzBool "#then" InsertDzKList "#else" InsertDzKList "#fi" -> KList {cons("KList125Syn")}
     "minInt" "(" InsertDzInt "," InsertDzInt ")" -> Int {cons("Int164Syn")}
-    "ltrim" "(" InsertDzString ")" -> String {cons("String1226Syn")}
     "#if" InsertDzBool "#then" InsertDzInt "#else" InsertDzInt "#fi" -> Int {cons("Int126Syn")}
+    "ltrim" "(" InsertDzString ")" -> String {cons("String1226Syn")}
     "#substituteBinder1" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1359Syn")}
-    "Set2KTermAcc" "(" InsertDzSet "," InsertDzK ")" -> K {cons("K1289Syn")}
     "Id2String" "(" InsertDzId ")" -> String {cons("String1243Syn")}
+    "Set2KTermAcc" "(" InsertDzSet "," InsertDzK ")" -> K {cons("K1289Syn")}
     DzFloat -> Float {}
+    K "in" MySet -> Bool {cons("Bool1450Syn")}
     KList "==KList" KList -> Bool {cons("Bool134Syn")}
-    "#freshVar" "(" InsertDzK "," InsertDzSet ")" -> K {cons("K1326Syn")}
-    "isKLabelConstant" "(" InsertDzKLabel ")" -> Bool {cons("Bool1387Syn")}
-    "#changeLabel" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1373Syn")}
     Set "=/=Set" Set -> Bool {cons("Bool129Syn")}
+    "#freshVar" "(" InsertDzK "," InsertDzSet ")" -> K {cons("K1326Syn")}
+    "#changeLabel" "(" InsertDzK "," InsertDzK ")" -> K {cons("K1373Syn")}
+    "isKLabelConstant" "(" InsertDzKLabel ")" -> Bool {cons("Bool1387Syn")}
     "#freeVars" "(" InsertDzKList ")" -> K {cons("K1343Syn")}
     Int ">=Int" Int -> Bool {left, cons("Bool169Syn")}
     "Set2KTerm" "(" InsertDzSet ")" -> K {cons("K1288Syn")}
-    Id "=" InsertDzAExp ";" -> Stmt {cons("Stmt1493Syn")}
+    "#open" "(" InsertDzString ")" -> KItem {cons("KItem1399Syn")}
     "categoryChar" "(" InsertDzString ")" -> String {cons("String1234Syn")}
     "#noparse" -> TCPError {cons("TCPError1247Syn")}
-    "if" "(" InsertDzBExp ")" InsertDzBlock "else" Block -> Stmt {cons("Stmt1494Syn")}
-    {Id ","}* -> Ids {cons("Ids1ListSyn")}
-    AExp -> InsertDzAExp
-    Set -> InsertDzSet
-    Stmts -> InsertDzStmts
-    BExp -> InsertDzBExp
-    Bag -> InsertDzBag
-    K -> InsertDzK
-    String -> InsertDzString
-    KList -> InsertDzKList
-    Int -> InsertDzInt
-    Float -> InsertDzFloat
-    KLabel -> InsertDzKLabel
-    Bool -> InsertDzBool
-    Char -> InsertDzChar
-    Ids -> InsertDzIds
-    Block -> InsertDzBlock
-    List -> InsertDzList
-    Id -> InsertDzId
-    Map -> InsertDzMap
-    KItem -> InsertDzKItem
+    "#parseInput" "(" InsertDzString "," InsertDzString ")" -> Stream {cons("Stream1ParseSyn")}
+    Id "," Ids -> Ids {cons("Ids1ListSyn")}
+    ".Ids" -> Ids {cons("Ids1Empty")}
+    "#string2klist" "(" InsertDzString ")" -> KList {cons("KList1432Syn")}
+    Set    -> InsertDzSet
+    Stmts    -> InsertDzStmts
+    MySet    -> InsertDzMySet
+    MyMap    -> InsertDzMyMap
+    MyBag    -> InsertDzMyBag
+    Bag    -> InsertDzBag
+    K    -> InsertDzK
+    String    -> InsertDzString
+    KList    -> InsertDzKList
+    Int    -> InsertDzInt
+    Float    -> InsertDzFloat
+    KLabel    -> InsertDzKLabel
+    Bool    -> InsertDzBool
+    Char    -> InsertDzChar
+    MyList    -> InsertDzMyList
+    Ids    -> InsertDzIds
+    Block    -> InsertDzBlock
+    List    -> InsertDzList
+    TCPAnswer    -> InsertDzTCPAnswer
+    Id    -> InsertDzId
+    Exp    -> InsertDzExp
+    Map    -> InsertDzMap
+    KItem    -> InsertDzKItem
+
+
+    VARID  ":Nat"        -> NatDzVar            {cons("Nat12Var")}
+    VARID  ":Val"        -> ValDzVar            {cons("Val12Var")}
+    VARID  ":AExp"        -> AExpDzVar            {cons("AExp12Var")}
+    VARID  ":Variable"        -> VariableDzVar            {cons("Variable12Var")}
+    VARID  ":MySet"        -> MySetDzVar            {cons("MySet12Var")}
+    VARID  ":Stmts"        -> StmtsDzVar            {cons("Stmts12Var")}
+    VARID  ":MyMap"        -> MyMapDzVar            {cons("MyMap12Var")}
+    VARID  ":String"        -> StringDzVar            {cons("String12Var")}
+    VARID  ":Int"        -> IntDzVar            {cons("Int12Var")}
+    VARID  ":Stmt"        -> StmtDzVar            {cons("Stmt12Var")}
+    VARID  ":Bool"        -> BoolDzVar            {cons("Bool12Var")}
+    VARID  ":Char"        -> CharDzVar            {cons("Char12Var")}
+    VARID  ":Ids"        -> IdsDzVar            {cons("Ids12Var")}
+    VARID  ":Stream"        -> StreamDzVar            {cons("Stream12Var")}
+    VARID  ":TCPAnswer"        -> TCPAnswerDzVar            {cons("TCPAnswer12Var")}
+    VARID  ":#Int"        -> DzIntDzVar            {cons("DzInt12Var")}
+    VARID  ":#String"        -> DzStringDzVar            {cons("DzString12Var")}
+    VARID  ":#Bool"        -> DzBoolDzVar            {cons("DzBool12Var")}
+    VARID  ":BExp"        -> BExpDzVar            {cons("BExp12Var")}
+    VARID  ":MyBag"        -> MyBagDzVar            {cons("MyBag12Var")}
+    VARID  ":Decl"        -> DdeclDzVar            {cons("Ddecl12Var")}
+    VARID  ":TCPError"        -> TCPErrorDzVar            {cons("TCPError12Var")}
+    VARID  ":Float"        -> FloatDzVar            {cons("Float12Var")}
+    VARID  ":MyList"        -> MyListDzVar            {cons("MyList12Var")}
+    VARID  ":Block"        -> BlockDzVar            {cons("Block12Var")}
+    VARID  ":Id"        -> IdDzVar            {cons("Id12Var")}
+    VARID  ":Exp"        -> ExpDzVar            {cons("Exp12Var")}
+    VARID  ":#Float"        -> DzFloatDzVar            {cons("DzFloat12Var")}
+
+     K CastTypeDz "Nat"    -> NatDzVar    {cons("Nat1Cast")}
+     K CastTypeDz "Val"    -> ValDzVar    {cons("Val1Cast")}
+     K CastTypeDz "AExp"    -> AExpDzVar    {cons("AExp1Cast")}
+     K CastTypeDz "Variable"    -> VariableDzVar    {cons("Variable1Cast")}
+     K CastTypeDz "MySet"    -> MySetDzVar    {cons("MySet1Cast")}
+     K CastTypeDz "Stmts"    -> StmtsDzVar    {cons("Stmts1Cast")}
+     K CastTypeDz "MyMap"    -> MyMapDzVar    {cons("MyMap1Cast")}
+     K CastTypeDz "String"    -> StringDzVar    {cons("String1Cast")}
+     K CastTypeDz "Int"    -> IntDzVar    {cons("Int1Cast")}
+     K CastTypeDz "Stmt"    -> StmtDzVar    {cons("Stmt1Cast")}
+     K CastTypeDz "Bool"    -> BoolDzVar    {cons("Bool1Cast")}
+     K CastTypeDz "Char"    -> CharDzVar    {cons("Char1Cast")}
+     K CastTypeDz "Ids"    -> IdsDzVar    {cons("Ids1Cast")}
+     K CastTypeDz "Stream"    -> StreamDzVar    {cons("Stream1Cast")}
+     K CastTypeDz "TCPAnswer"    -> TCPAnswerDzVar    {cons("TCPAnswer1Cast")}
+     K CastTypeDz "#Int"    -> DzIntDzVar    {cons("DzInt1Cast")}
+     K CastTypeDz "#String"    -> DzStringDzVar    {cons("DzString1Cast")}
+     K CastTypeDz "#Bool"    -> DzBoolDzVar    {cons("DzBool1Cast")}
+     K CastTypeDz "BExp"    -> BExpDzVar    {cons("BExp1Cast")}
+     K CastTypeDz "MyBag"    -> MyBagDzVar    {cons("MyBag1Cast")}
+     K CastTypeDz "Decl"    -> DdeclDzVar    {cons("Ddecl1Cast")}
+     K CastTypeDz "TCPError"    -> TCPErrorDzVar    {cons("TCPError1Cast")}
+     K CastTypeDz "Float"    -> FloatDzVar    {cons("Float1Cast")}
+     K CastTypeDz "MyList"    -> MyListDzVar    {cons("MyList1Cast")}
+     K CastTypeDz "Block"    -> BlockDzVar    {cons("Block1Cast")}
+     K CastTypeDz "Id"    -> IdDzVar    {cons("Id1Cast")}
+     K CastTypeDz "Exp"    -> ExpDzVar    {cons("Exp1Cast")}
+     K CastTypeDz "#Float"    -> DzFloatDzVar    {cons("DzFloat1Cast")}
+     NatDzVar   -> Nat
+     ValDzVar   -> Val
+     AExpDzVar   -> AExp
+     VariableDzVar   -> Variable
+     MySetDzVar   -> MySet
+     StmtsDzVar   -> Stmts
+     MyMapDzVar   -> MyMap
+     StringDzVar   -> String
+     IntDzVar   -> Int
+     StmtDzVar   -> Stmt
+     BoolDzVar   -> Bool
+     CharDzVar   -> Char
+     IdsDzVar   -> Ids
+     StreamDzVar   -> Stream
+     TCPAnswerDzVar   -> TCPAnswer
+     DzIntDzVar   -> DzInt
+     DzStringDzVar   -> DzString
+     DzBoolDzVar   -> DzBool
+     BExpDzVar   -> BExp
+     MyBagDzVar   -> MyBag
+     DdeclDzVar   -> Ddecl
+     TCPErrorDzVar   -> TCPError
+     FloatDzVar   -> Float
+     MyListDzVar   -> MyList
+     BlockDzVar   -> Block
+     IdDzVar   -> Id
+     ExpDzVar   -> Exp
+     DzFloatDzVar   -> DzFloat
+     K CastTypeDz "K"        -> VariableDz    {cons("K1Cast")}
+     K CastTypeDz "KItem"    -> VariableDz    {cons("KItem1Cast")}
+
+    VariableDz -> K
 
 
     DzDzString        -> DzString    {cons("DzString1Const")}
@@ -397,30 +760,36 @@ context-free syntax
     DzDzFloat        -> DzFloat    {cons("DzFloat1Const")}
 
 
-
-%% start symbols subsorts
-    KItem        -> K
-    Val        -> K
-    AExp        -> K
-    Variable        -> K
-    Stmts        -> K
-    String        -> K
-    Int        -> K
-    Stmt        -> K
-    Bool        -> K
-    Char        -> K
-    TCPAnswer        -> K
-    DzInt        -> K
-    DzString        -> K
-    DzBool        -> K
-    BExp        -> K
-    Ddecl        -> K
-    TCPError        -> K
-    Float        -> K
-    Block        -> K
-    Id        -> K
-    Exp        -> K
-    DzFloat        -> K
+context-free restrictions
+    NatDzVar -/- [a-zA-Z0-9]
+    ValDzVar -/- [a-zA-Z0-9]
+    AExpDzVar -/- [a-zA-Z0-9]
+    VariableDzVar -/- [a-zA-Z0-9]
+    MySetDzVar -/- [a-zA-Z0-9]
+    StmtsDzVar -/- [a-zA-Z0-9]
+    MyMapDzVar -/- [a-zA-Z0-9]
+    StringDzVar -/- [a-zA-Z0-9]
+    IntDzVar -/- [a-zA-Z0-9]
+    StmtDzVar -/- [a-zA-Z0-9]
+    BoolDzVar -/- [a-zA-Z0-9]
+    CharDzVar -/- [a-zA-Z0-9]
+    IdsDzVar -/- [a-zA-Z0-9]
+    StreamDzVar -/- [a-zA-Z0-9]
+    TCPAnswerDzVar -/- [a-zA-Z0-9]
+    DzIntDzVar -/- [a-zA-Z0-9]
+    DzStringDzVar -/- [a-zA-Z0-9]
+    DzBoolDzVar -/- [a-zA-Z0-9]
+    BExpDzVar -/- [a-zA-Z0-9]
+    MyBagDzVar -/- [a-zA-Z0-9]
+    DdeclDzVar -/- [a-zA-Z0-9]
+    TCPErrorDzVar -/- [a-zA-Z0-9]
+    FloatDzVar -/- [a-zA-Z0-9]
+    MyListDzVar -/- [a-zA-Z0-9]
+    BlockDzVar -/- [a-zA-Z0-9]
+    IdDzVar -/- [a-zA-Z0-9]
+    ExpDzVar -/- [a-zA-Z0-9]
+    DzFloatDzVar -/- [a-zA-Z0-9]
+    VariableDz -/- [a-zA-Z0-9]
 lexical syntax
     "redex" -> DzKLabel
     "#set" -> DzKLabel
@@ -438,244 +807,267 @@ lexical syntax
     "#symEqualitySort" -> DzKLabel
 
 
-    "directionalityChar" -> IdDz {reject}
-    "trim" -> IdDz {reject}
-    "categoryChar" -> IdDz {reject}
-    "isSymbolicSet" -> IdDz {reject}
-    "isBinder" -> IdDz {reject}
-    "vars" -> IdDz {reject}
-    "checkSat" -> IdDz {reject}
-    "ordChar" -> IdDz {reject}
-    "Int2Float" -> IdDz {reject}
-    "getKLabel" -> IdDz {reject}
-    "semaphore" -> IdDz {reject}
-    "isLocalFreshVar" -> IdDz {reject}
-    "getVariables" -> IdDz {reject}
-    "replaceFirst" -> IdDz {reject}
-    "isBounding" -> IdDz {reject}
-    "KLabel2String" -> IdDz {reject}
-    "xorBool" -> IdDz {reject}
-    "maxInt" -> IdDz {reject}
-    "forall" -> IdDz {reject}
-    "undef" -> IdDz {reject}
-    "SMTCall" -> IdDz {reject}
-    "isKResult" -> IdDz {reject}
-    "xorInt" -> IdDz {reject}
-    "notBool" -> IdDz {reject}
-    "Map2KLabel" -> IdDz {reject}
-    "lengthString" -> IdDz {reject}
-    "unlock" -> IdDz {reject}
-    "ltrim" -> IdDz {reject}
-    "isBuiltin" -> IdDz {reject}
-    "orBool" -> IdDz {reject}
-    "isSymbolicBag" -> IdDz {reject}
-    "replaceAll" -> IdDz {reject}
-    "Set2KTerm" -> IdDz {reject}
-    "rfindChar" -> IdDz {reject}
-    "intersectSet" -> IdDz {reject}
-    "false" -> IdDz {reject}
-    "String2Int" -> IdDz {reject}
-    "print" -> IdDz {reject}
-    "isBound" -> IdDz {reject}
-    "Bag2KLabel" -> IdDz {reject}
-    "fresh" -> IdDz {reject}
-    "getMatching" -> IdDz {reject}
-    "K2SMTLib" -> IdDz {reject}
-    "rfindString" -> IdDz {reject}
-    "freshVariables" -> IdDz {reject}
-    "Float2Int" -> IdDz {reject}
-    "dummy" -> IdDz {reject}
-    "isSymbolicMap" -> IdDz {reject}
-    "Set2KTermAcc" -> IdDz {reject}
-    "findString" -> IdDz {reject}
-    "dividesInt" -> IdDz {reject}
-    "else" -> IdDz {reject}
-    "lock" -> IdDz {reject}
-    "if" -> IdDz {reject}
-    "isSet" -> IdDz {reject}
-    "in" -> IdDz {reject}
-    "Float2String" -> IdDz {reject}
-    "decomposeMatching" -> IdDz {reject}
-    "isKLabelConstant" -> IdDz {reject}
-    "isMatching" -> IdDz {reject}
-    "CellLabel2KLabel" -> IdDz {reject}
-    "String2Id" -> IdDz {reject}
-    "isSymbolicList" -> IdDz {reject}
-    "divInt" -> IdDz {reject}
-    "absInt" -> IdDz {reject}
-    "Map" -> IdDz {reject}
-    "chrChar" -> IdDz {reject}
-    "randomRandom" -> IdDz {reject}
-    "isEmptySet" -> IdDz {reject}
-    "KList2KLabel" -> IdDz {reject}
-    "K2Sort" -> IdDz {reject}
-    "cool" -> IdDz {reject}
-    "freeVariables" -> IdDz {reject}
-    "redex" -> IdDz {reject}
-    "String2Float" -> IdDz {reject}
-    "exists" -> IdDz {reject}
-    "impliesBool" -> IdDz {reject}
-    "SMTLibQuery" -> IdDz {reject}
-    "andThenBool" -> IdDz {reject}
-    "List2KLabel" -> IdDz {reject}
-    "replace" -> IdDz {reject}
-    "lengthList" -> IdDz {reject}
-    "String2KLabel" -> IdDz {reject}
-    "while" -> IdDz {reject}
-    "isToken" -> IdDz {reject}
-    "inVars" -> IdDz {reject}
-    "substrString" -> IdDz {reject}
-    "Vars2SMTLib" -> IdDz {reject}
-    "countAllOccurences" -> IdDz {reject}
-    "KLabel2KLabel" -> IdDz {reject}
-    "read" -> IdDz {reject}
-    "Int2String" -> IdDz {reject}
-    "Consts2SMTLib" -> IdDz {reject}
-    "true" -> IdDz {reject}
-    "heated" -> IdDz {reject}
-    "Char2String" -> IdDz {reject}
-    "Set2KLabel" -> IdDz {reject}
-    "heat" -> IdDz {reject}
-    "String2Char" -> IdDz {reject}
-    "modInt" -> IdDz {reject}
-    "minInt" -> IdDz {reject}
-    "keys" -> IdDz {reject}
-    "values" -> IdDz {reject}
-    "orElseBool" -> IdDz {reject}
-    "findChar" -> IdDz {reject}
-    "and" -> IdDz {reject}
-    "Id2String" -> IdDz {reject}
-    "or" -> IdDz {reject}
-    "rtrim" -> IdDz {reject}
-    "inKList" -> IdDz {reject}
-    "int" -> IdDz {reject}
-    "andBool" -> IdDz {reject}
-    "spawn" -> IdDz {reject}
-    "isVariable" -> IdDz {reject}
+%% sort predicates
+    "isNat"      -> DzKLabel
+    "isSymbolicNat"      -> DzKLabel
+    "#symNat"      -> DzKLabel
+    "isVal"      -> DzKLabel
+    "isSymbolicVal"      -> DzKLabel
+    "#symVal"      -> DzKLabel
+    "isAExp"      -> DzKLabel
+    "isSymbolicAExp"      -> DzKLabel
+    "#symAExp"      -> DzKLabel
+    "isVariable"      -> DzKLabel
+    "isSymbolicVariable"      -> DzKLabel
+    "#symVariable"      -> DzKLabel
+    "isMySet"      -> DzKLabel
+    "isSymbolicMySet"      -> DzKLabel
+    "#symMySet"      -> DzKLabel
+    "isStmts"      -> DzKLabel
+    "isSymbolicStmts"      -> DzKLabel
+    "#symStmts"      -> DzKLabel
+    "isMyMap"      -> DzKLabel
+    "isSymbolicMyMap"      -> DzKLabel
+    "#symMyMap"      -> DzKLabel
+    "isSymbolicK"      -> DzKLabel
+    "#symK"      -> DzKLabel
+    "isString"      -> DzKLabel
+    "isSymbolicString"      -> DzKLabel
+    "#symString"      -> DzKLabel
+    "isInt"      -> DzKLabel
+    "isSymbolicInt"      -> DzKLabel
+    "#symInt"      -> DzKLabel
+    "isStmt"      -> DzKLabel
+    "isSymbolicStmt"      -> DzKLabel
+    "#symStmt"      -> DzKLabel
+    "isBool"      -> DzKLabel
+    "isSymbolicBool"      -> DzKLabel
+    "#symBool"      -> DzKLabel
+    "isChar"      -> DzKLabel
+    "isSymbolicChar"      -> DzKLabel
+    "#symChar"      -> DzKLabel
+    "isIds"      -> DzKLabel
+    "isSymbolicIds"      -> DzKLabel
+    "#symIds"      -> DzKLabel
+    "isStream"      -> DzKLabel
+    "isSymbolicStream"      -> DzKLabel
+    "#symStream"      -> DzKLabel
+    "isTCPAnswer"      -> DzKLabel
+    "isSymbolicTCPAnswer"      -> DzKLabel
+    "#symTCPAnswer"      -> DzKLabel
+    "is#Int"      -> DzKLabel
+    "is#String"      -> DzKLabel
+    "is#Bool"      -> DzKLabel
+    "isBExp"      -> DzKLabel
+    "isSymbolicBExp"      -> DzKLabel
+    "#symBExp"      -> DzKLabel
+    "isMyBag"      -> DzKLabel
+    "isSymbolicMyBag"      -> DzKLabel
+    "#symMyBag"      -> DzKLabel
+    "isDecl"      -> DzKLabel
+    "isSymbolicDecl"      -> DzKLabel
+    "#symDecl"      -> DzKLabel
+    "isTCPError"      -> DzKLabel
+    "isSymbolicTCPError"      -> DzKLabel
+    "#symTCPError"      -> DzKLabel
+    "isKResult"      -> DzKLabel
+    "isSymbolicKResult"      -> DzKLabel
+    "#symKResult"      -> DzKLabel
+    "isFloat"      -> DzKLabel
+    "isSymbolicFloat"      -> DzKLabel
+    "#symFloat"      -> DzKLabel
+    "isMyList"      -> DzKLabel
+    "isSymbolicMyList"      -> DzKLabel
+    "#symMyList"      -> DzKLabel
+    "isBlock"      -> DzKLabel
+    "isSymbolicBlock"      -> DzKLabel
+    "#symBlock"      -> DzKLabel
+    "isId"      -> DzKLabel
+    "isSymbolicId"      -> DzKLabel
+    "#symId"      -> DzKLabel
+    "isExp"      -> DzKLabel
+    "isSymbolicExp"      -> DzKLabel
+    "#symExp"      -> DzKLabel
+    "isSymbolicKItem"      -> DzKLabel
+    "#symKItem"      -> DzKLabel
+    "is#Float"      -> DzKLabel
+
+
+
+%% terminals reject
+    "K2String" -> VARID {reject}
+    "Int2Float" -> VARID {reject}
+    "KLabel2String" -> VARID {reject}
+    "Bag2String" -> VARID {reject}
+    "SMTCall" -> VARID {reject}
+    "String2Bool" -> VARID {reject}
+    "Map2KLabel" -> VARID {reject}
+    "String2K" -> VARID {reject}
+    "MySetItem" -> VARID {reject}
+    "MyListItem" -> VARID {reject}
+    "Set2KTerm" -> VARID {reject}
+    "String2Bag" -> VARID {reject}
+    "String2Int" -> VARID {reject}
+    "Bag2KLabel" -> VARID {reject}
+    "K2SMTLib" -> VARID {reject}
+    "Float2Int" -> VARID {reject}
+    "Set2KTermAcc" -> VARID {reject}
+    "Float2String" -> VARID {reject}
+    "CellLabel2KLabel" -> VARID {reject}
+    "String2DotK" -> VARID {reject}
+    "String2Id" -> VARID {reject}
+    "Map" -> VARID {reject}
+    "KList2KLabel" -> VARID {reject}
+    "K2Sort" -> VARID {reject}
+    "String2Float" -> VARID {reject}
+    "MyBagItem" -> VARID {reject}
+    "SMTLibQuery" -> VARID {reject}
+    "List2KLabel" -> VARID {reject}
+    "String2KLabel" -> VARID {reject}
+    "Vars2SMTLib" -> VARID {reject}
+    "KLabel2KLabel" -> VARID {reject}
+    "Int2String" -> VARID {reject}
+    "Consts2SMTLib" -> VARID {reject}
+    "Char2String" -> VARID {reject}
+    "Set2KLabel" -> VARID {reject}
+    "MyMapOf" -> VARID {reject}
+    "String2Char" -> VARID {reject}
+    "Id2String" -> VARID {reject}
 
 lexical restrictions
     %% follow restrictions
-    "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t]
-    "or" -/- [B].[o].[o].[l]
+    "#parse" -/- [I].[n].[p].[u].[t]
     "=" -/- [M].[a].[p]
     "#" -/- [E].[B].[A].[D].[F]
-    "#" -/- [E].[I].[S].[D].[I].[R]
     "#token" -/- [T].[o].[S].[t].[r].[i].[n].[g]
-    "-" -/- [F].[l].[o].[a].[t]
     "#freshSym" -/- [S].[o].[r].[t]
-    "#" -/- [E].[S].[P].[I].[P].[E]
-    "#" -/- [E].[N].[O].[T].[D].[I].[R]
-    "and" -/- [T].[h].[e].[n].[B].[o].[o].[l]
+    "String2K" -/- [L].[a].[b].[e].[l]
     ">" -/- [I].[n].[t]
     "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t].[\1]
     "=" -/- [K].[L].[a].[b].[e].[l]
     "#substitutePlain" -/- [L].[i].[s].[t].[\1]
+    "#" -/- [E].[N].[A].[M].[E].[T].[O].[O].[L].[O].[N].[G]
+    "=/=K" -/- [L].[a].[b].[e].[l]
+    ">" -/- [F].[l].[o].[a].[t]
+    "-" -/- [M].[y].[S].[e].[t]
+    "#substitute" -/- [P].[l].[a].[i].[n]
+    "#substitute" -/- [B].[i].[n].[d].[e].[r]
+    "-" -/- [S].[e].[t]
+    "==" -/- [S].[e].[t]
+    "==" -/- [F].[l].[o].[a].[t]
+    "=" -/- [S].[e].[t]
+    "." -/- [M].[y].[S].[e].[t]
+    "replace" -/- [F].[i].[r].[s].[t]
+    "#stat" -/- [T].[y].[p].[e].[s]
+    "." -/- [M].[y].[M].[a].[p]
+    "==" -/- [M].[a].[p]
+    "<=" -/- [I].[n].[t]
+    "=K" -/- [L].[i].[s].[t]
+    "==" -/- [K]
+    "<" -/- [I].[n].[t]
+    "=/=K" -/- [L].[i].[s].[t]
+    "#" -/- [E].[A].[C].[C].[E].[S]
+    "==K" -/- [L].[a].[b].[e].[l]
+    "#freshSym" -/- [S].[o].[r].[t].[N]
+    "==" -/- [L].[i].[s].[t]
+    "+" -/- [F].[l].[o].[a].[t]
+    "==" -/- [K].[L].[a].[b].[e].[l]
+    "in" -/- [V].[a].[r].[s]
+    "#getVars" -/- [F].[r].[o].[m].[K]
+    "/" -/- [I].[n].[t]
+    ">=" -/- [F].[l].[o].[a].[t]
+    "#substitute" -/- [P].[l].[a].[i].[n].[L].[i].[s].[t]
+    "or" -/- [B].[o].[o].[l]
+    "#" -/- [E].[I].[S].[D].[I].[R]
+    "-" -/- [F].[l].[o].[a].[t]
+    "#" -/- [E].[S].[P].[I].[P].[E]
+    "#" -/- [E].[N].[O].[T].[D].[I].[R]
+    "and" -/- [T].[h].[e].[n].[B].[o].[o].[l]
     "<" -/- [S].[t].[r].[i].[n].[g]
     "#freeVars" -/- [S].[e].[t]
-    "#" -/- [E].[N].[A].[M].[E].[T].[O].[O].[L].[O].[N].[G]
     "*" -/- [I].[n].[t]
+    "#parse" -/- [T].[o].[k].[e].[n]
     "=K" -/- [L].[a].[b].[e].[l]
     "+" -/- [S].[t].[r].[i].[n].[g]
     "#substitute" -/- [L].[i].[s].[t]
-    "=/=K" -/- [L].[a].[b].[e].[l]
-    ">" -/- [F].[l].[o].[a].[t]
     "or" -/- [E].[l].[s].[e].[B].[o].[o].[l]
-    "#substitute" -/- [P].[l].[a].[i].[n]
+    "." -/- [M].[y].[B].[a].[g]
     "and" -/- [B].[o].[o].[l]
     "==K" -/- [L].[i].[s].[t]
     "fresh" -/- [V].[a].[r].[i].[a].[b].[l].[e].[s]
     "<=" -/- [S].[t].[r].[i].[n].[g]
     "==" -/- [K].[L].[i].[s].[t]
-    "#substitute" -/- [B].[i].[n].[d].[e].[r]
     "=" -/- [I].[n].[t]
     "#substitute" -/- [B].[i].[n].[d].[e].[r].[\1]
-    "-" -/- [S].[e].[t]
     "==" -/- [I].[n].[t]
     "#substitute" -/- [B].[i].[n].[d].[e].[r].[\2]
     "-" -/- [I].[n].[t]
-    "==" -/- [S].[e].[t]
     "replace" -/- [A].[l].[l]
-    "==" -/- [F].[l].[o].[a].[t]
-    "=" -/- [S].[e].[t]
-    "%" -/- [I].[n].[t]
     "in" -/- [K].[L].[i].[s].[t]
-    "replace" -/- [F].[i].[r].[s].[t]
     "Set2KTerm" -/- [A].[c].[c]
-    "==" -/- [M].[a].[p]
     "*" -/- [F].[l].[o].[a].[t]
-    "<=" -/- [I].[n].[t]
-    "=K" -/- [L].[i].[s].[t]
     "<=" -/- [F].[l].[o].[a].[t]
     "=" -/- [L].[i].[s].[t]
     "<=" -/- [S].[e].[t]
     "#substitute" -/- [K]
     "#substitute" -/- [F].[V]
-    "==" -/- [K]
     "#freshSymSort" -/- [N]
     "#freshSym" -/- [N]
     "==" -/- [S].[t].[r].[i].[n].[g]
     ">" -/- [S].[t].[r].[i].[n].[g]
-    "<" -/- [I].[n].[t]
     "<" -/- [F].[l].[o].[a].[t]
     "=" -/- [B].[a].[g]
     "==" -/- [B].[o].[o].[l]
     "#substitute" -/- [K].[A].[r].[r].[o].[w]
     "#freeVars" -/- [B].[i].[n].[d].[e].[r]
-    "=/=K" -/- [L].[i].[s].[t]
-    "#" -/- [E].[A].[C].[C].[E].[S]
     "/" -/- [F].[l].[o].[a].[t]
     "#" -/- [E].[L].[O].[O].[P]
     "#" -/- [E].[N].[O].[E].[N].[T]
     "#freeVars" -/- [B].[i].[n].[d].[e].[r].[\1]
-    "==K" -/- [L].[a].[b].[e].[l]
     ">=" -/- [I].[n].[t]
     "#freeVars" -/- [B].[i].[n].[d].[e].[r].[\2]
-    "#freshSym" -/- [S].[o].[r].[t].[N]
-    "==" -/- [L].[i].[s].[t]
     "=" -/- [K]
-    "%" -/- [F].[l].[o].[a].[t]
     "#" -/- [E].[O].[F]
     "#substitutePlain" -/- [L].[i].[s].[t]
     ">=" -/- [S].[t].[r].[i].[n].[g]
-    "+" -/- [F].[l].[o].[a].[t]
-    "==" -/- [K].[L].[a].[b].[e].[l]
     "#eval" -/- [H].[e].[l].[p].[e].[r]
     "#substitute" -/- [L].[i].[s].[t].[\1]
     "=" -/- [K].[L].[i].[s].[t]
-    "in" -/- [V].[a].[r].[s]
-    "#getVars" -/- [F].[r].[o].[m].[K]
     "<=" -/- [M].[a].[p]
+    "." -/- [M].[y].[L].[i].[s].[t]
     "#substituteK" -/- [A].[r].[r].[o].[w]
-    "/" -/- [I].[n].[t]
-    ">=" -/- [F].[l].[o].[a].[t]
     "+" -/- [I].[n].[t]
     "#" -/- [E].[I].[N].[V].[A].[L]
-
+lexical restrictions
+%% some restrictions to ensure greedy matching for user defined constants
+    "is" -/- [\#A-Z]
 
 lexical syntax
     [\-\+]?[0-9]+ -> DzIntDz
-    "\"" ((~[\"\n\r\\])|(((([\\][nrtf\"\\])|([\\][x][0-9a-fA-F][0-9a-fA-F]))|([\\][u][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]))|([\\][U][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))*"\"" -> DzStringDz
     [\+\-]?[0-9]+"."[0-9]+([eE][\+\-]?[0-9]+)?[fFdD]? -> DzFloatDz
-    [A-Za-z\_][A-Za-z0-9\_]* -> IdDz
-    "directionalityChar" -> DzStringDz {reject}
+    "\"" ((~[\"\n\r\\])|(((([\\][nrtf\"\\])|([\\][x][0-9a-fA-F][0-9a-fA-F]))|([\\][u][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]))|([\\][U][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])))*"\"" -> DzStringDz
+    "#stdin" -> DzStringDz {reject}
     "%Float" -> DzStringDz {reject}
+    "directionalityChar" -> DzStringDz {reject}
     "#getVarsFromK" -> DzStringDz {reject}
+    "#stderr" -> DzStringDz {reject}
     "<Int" -> DzStringDz {reject}
+    "K2String" -> DzStringDz {reject}
     ">String" -> DzStringDz {reject}
     "trim" -> DzStringDz {reject}
     "categoryChar" -> DzStringDz {reject}
     "isSymbolicSet" -> DzStringDz {reject}
     "#evalHelper" -> DzStringDz {reject}
     "isBinder" -> DzStringDz {reject}
-    "#substituteBinder" -> DzStringDz {reject}
     "#binderSplit1" -> DzStringDz {reject}
+    "#substituteBinder" -> DzStringDz {reject}
     "vars" -> DzStringDz {reject}
     "#binderSplit2" -> DzStringDz {reject}
     "#freeVars1" -> DzStringDz {reject}
+    "#read" -> DzStringDz {reject}
     "!" -> DzStringDz {reject}
     "#" -> DzStringDz {reject}
     "checkSat" -> DzStringDz {reject}
-    "%" -> DzStringDz {reject}
     "#fi" -> DzStringDz {reject}
     "(" -> DzStringDz {reject}
     ")" -> DzStringDz {reject}
@@ -684,10 +1076,11 @@ lexical syntax
     "+" -> DzStringDz {reject}
     "," -> DzStringDz {reject}
     "-" -> DzStringDz {reject}
-    "." -> DzStringDz {reject}
     "Int2Float" -> DzStringDz {reject}
+    "." -> DzStringDz {reject}
     "/" -> DzStringDz {reject}
     "#inKList" -> DzStringDz {reject}
+    "size" -> DzStringDz {reject}
     "getKLabel" -> DzStringDz {reject}
     ">=Int" -> DzStringDz {reject}
     "=/=KList" -> DzStringDz {reject}
@@ -709,36 +1102,45 @@ lexical syntax
     "isBounding" -> DzStringDz {reject}
     "KLabel2String" -> DzStringDz {reject}
     "#getVars" -> DzStringDz {reject}
+    "Bag2String" -> DzStringDz {reject}
     "#getVars1" -> DzStringDz {reject}
     "[" -> DzStringDz {reject}
     "]" -> DzStringDz {reject}
     "xorBool" -> DzStringDz {reject}
+    "#parse" -> DzStringDz {reject}
+    "#string2klist" -> DzStringDz {reject}
     "#substitutePlainList" -> DzStringDz {reject}
     "maxInt" -> DzStringDz {reject}
     "forall" -> DzStringDz {reject}
+    "#stdout" -> DzStringDz {reject}
     "undef" -> DzStringDz {reject}
+    "#getc" -> DzStringDz {reject}
     "=Int" -> DzStringDz {reject}
     "==String" -> DzStringDz {reject}
     "#freeVars" -> DzStringDz {reject}
     "SMTCall" -> DzStringDz {reject}
     "#freshSubst1" -> DzStringDz {reject}
+    ".MyMap" -> DzStringDz {reject}
     "#noparse" -> DzStringDz {reject}
+    "#tell" -> DzStringDz {reject}
     "#boundVars1" -> DzStringDz {reject}
+    "String2Bool" -> DzStringDz {reject}
     "#patternMatch1" -> DzStringDz {reject}
     "{" -> DzStringDz {reject}
     "}" -> DzStringDz {reject}
-    "isKResult" -> DzStringDz {reject}
     "#if" -> DzStringDz {reject}
+    "isKResult" -> DzStringDz {reject}
     "xorInt" -> DzStringDz {reject}
     "notBool" -> DzStringDz {reject}
     "Map2KLabel" -> DzStringDz {reject}
     "#freeVarsBinder" -> DzStringDz {reject}
-    "-Int" -> DzStringDz {reject}
+    "String2K" -> DzStringDz {reject}
     "=Bag" -> DzStringDz {reject}
+    "-Int" -> DzStringDz {reject}
     "#freshSymSort" -> DzStringDz {reject}
     "lengthString" -> DzStringDz {reject}
-    "#counter" -> DzStringDz {reject}
     "##tcpRequest" -> DzStringDz {reject}
+    "#counter" -> DzStringDz {reject}
     "^Int" -> DzStringDz {reject}
     "#freeVarsBinder1" -> DzStringDz {reject}
     "#freeVarsBinder2" -> DzStringDz {reject}
@@ -747,15 +1149,18 @@ lexical syntax
     "#substMap" -> DzStringDz {reject}
     "#isTCPError" -> DzStringDz {reject}
     "#EISDIR" -> DzStringDz {reject}
+    "#parseInput" -> DzStringDz {reject}
     "unlock" -> DzStringDz {reject}
     "#isMapInK" -> DzStringDz {reject}
-    "ltrim" -> DzStringDz {reject}
     "=/=List" -> DzStringDz {reject}
+    "ltrim" -> DzStringDz {reject}
     "#patternMatch" -> DzStringDz {reject}
-    "~Int" -> DzStringDz {reject}
+    "#istream" -> DzStringDz {reject}
     "==K" -> DzStringDz {reject}
+    "~Int" -> DzStringDz {reject}
     "isBuiltin" -> DzStringDz {reject}
     "#ENOTDIR" -> DzStringDz {reject}
+    "MySetItem" -> DzStringDz {reject}
     "#freshSymSortN" -> DzStringDz {reject}
     "#changeLabel" -> DzStringDz {reject}
     "=/=Map" -> DzStringDz {reject}
@@ -763,7 +1168,10 @@ lexical syntax
     "isSymbolicBag" -> DzStringDz {reject}
     "$hasMapping" -> DzStringDz {reject}
     "#isDigit" -> DzStringDz {reject}
+    "MyListItem" -> DzStringDz {reject}
+    "update" -> DzStringDz {reject}
     ">Int" -> DzStringDz {reject}
+    "#open" -> DzStringDz {reject}
     "replaceAll" -> DzStringDz {reject}
     "#ESPIPE" -> DzStringDz {reject}
     "==KList" -> DzStringDz {reject}
@@ -771,17 +1179,20 @@ lexical syntax
     "=KLabel" -> DzStringDz {reject}
     "Set2KTerm" -> DzStringDz {reject}
     "rfindChar" -> DzStringDz {reject}
+    "#stat" -> DzStringDz {reject}
     "#isWhiteSpace" -> DzStringDz {reject}
+    "String2Bag" -> DzStringDz {reject}
     "=/=K" -> DzStringDz {reject}
     "intersectSet" -> DzStringDz {reject}
     "-Set" -> DzStringDz {reject}
     "#tokenToString" -> DzStringDz {reject}
     "#then" -> DzStringDz {reject}
-    "#splitedBinder" -> DzStringDz {reject}
     "==Map" -> DzStringDz {reject}
+    "#splitedBinder" -> DzStringDz {reject}
     "#substituteK" -> DzStringDz {reject}
     "false" -> DzStringDz {reject}
     "^Float" -> DzStringDz {reject}
+    "#close" -> DzStringDz {reject}
     "String2Int" -> DzStringDz {reject}
     "#freshSubst" -> DzStringDz {reject}
     "print" -> DzStringDz {reject}
@@ -789,50 +1200,56 @@ lexical syntax
     "isBound" -> DzStringDz {reject}
     "Bag2KLabel" -> DzStringDz {reject}
     "-Float" -> DzStringDz {reject}
-    "#distinctCounter" -> DzStringDz {reject}
     "=Set" -> DzStringDz {reject}
+    "#distinctCounter" -> DzStringDz {reject}
     "+String" -> DzStringDz {reject}
     "#substitutePlainList1" -> DzStringDz {reject}
     "fresh" -> DzStringDz {reject}
     "=/=Bool" -> DzStringDz {reject}
+    "#opendir" -> DzStringDz {reject}
     "getMatching" -> DzStringDz {reject}
-    "K2SMTLib" -> DzStringDz {reject}
     "=List" -> DzStringDz {reject}
+    "K2SMTLib" -> DzStringDz {reject}
     "#checkTCPAnswer" -> DzStringDz {reject}
     "rfindString" -> DzStringDz {reject}
     "#substitutePlain" -> DzStringDz {reject}
     "#inSet" -> DzStringDz {reject}
     "freshVariables" -> DzStringDz {reject}
-    "Float2Int" -> DzStringDz {reject}
     "dummy" -> DzStringDz {reject}
+    "Float2Int" -> DzStringDz {reject}
     "isSymbolicMap" -> DzStringDz {reject}
-    "Set2KTermAcc" -> DzStringDz {reject}
     "#retrieveTCPError" -> DzStringDz {reject}
+    "Set2KTermAcc" -> DzStringDz {reject}
     "findString" -> DzStringDz {reject}
+    "#statTypes" -> DzStringDz {reject}
     "dividesInt" -> DzStringDz {reject}
     "else" -> DzStringDz {reject}
     "lock" -> DzStringDz {reject}
     "#EINVAL" -> DzStringDz {reject}
     "if" -> DzStringDz {reject}
     "=/=Float" -> DzStringDz {reject}
+    "#string2Int" -> DzStringDz {reject}
     "#eval" -> DzStringDz {reject}
     "isSet" -> DzStringDz {reject}
     "in" -> DzStringDz {reject}
     "<<Int" -> DzStringDz {reject}
+    "var" -> DzStringDz {reject}
     "#EBADF" -> DzStringDz {reject}
     "Float2String" -> DzStringDz {reject}
-    "decomposeMatching" -> DzStringDz {reject}
     "|->" -> DzStringDz {reject}
+    "decomposeMatching" -> DzStringDz {reject}
     "isKLabelConstant" -> DzStringDz {reject}
-    "isMatching" -> DzStringDz {reject}
     "/Float" -> DzStringDz {reject}
+    "isMatching" -> DzStringDz {reject}
     "<=String" -> DzStringDz {reject}
     ">=String" -> DzStringDz {reject}
     "CellLabel2KLabel" -> DzStringDz {reject}
     "=KList" -> DzStringDz {reject}
+    "String2DotK" -> DzStringDz {reject}
     "String2Id" -> DzStringDz {reject}
     "#getMapFromK" -> DzStringDz {reject}
     "==Bool" -> DzStringDz {reject}
+    "#seek" -> DzStringDz {reject}
     "isSymbolicList" -> DzStringDz {reject}
     "divInt" -> DzStringDz {reject}
     "absInt" -> DzStringDz {reject}
@@ -848,27 +1265,35 @@ lexical syntax
     "==Int" -> DzStringDz {reject}
     "KList2KLabel" -> DzStringDz {reject}
     "#parseToken" -> DzStringDz {reject}
+    "#ioError" -> DzStringDz {reject}
     "<String" -> DzStringDz {reject}
+    "#ostream" -> DzStringDz {reject}
     "=/=String" -> DzStringDz {reject}
     "#hasMapping" -> DzStringDz {reject}
-    "K2Sort" -> DzStringDz {reject}
     "#EACCES" -> DzStringDz {reject}
+    "K2Sort" -> DzStringDz {reject}
+    ">Float" -> DzStringDz {reject}
     "cool" -> DzStringDz {reject}
     "freeVariables" -> DzStringDz {reject}
-    ">Float" -> DzStringDz {reject}
+    "#noIO" -> DzStringDz {reject}
     "#rebind" -> DzStringDz {reject}
     "#boundVars" -> DzStringDz {reject}
+    "<=Map" -> DzStringDz {reject}
     "*Int" -> DzStringDz {reject}
     "redex" -> DzStringDz {reject}
-    "<=Map" -> DzStringDz {reject}
+    "<-" -> DzStringDz {reject}
+    "#buffer" -> DzStringDz {reject}
     "String2Float" -> DzStringDz {reject}
     "exists" -> DzStringDz {reject}
     "#freshSymN" -> DzStringDz {reject}
     "impliesBool" -> DzStringDz {reject}
-    "SMTLibQuery" -> DzStringDz {reject}
+    "MyBagItem" -> DzStringDz {reject}
+    ".MySet" -> DzStringDz {reject}
     "andThenBool" -> DzStringDz {reject}
-    "#rebind2" -> DzStringDz {reject}
+    "SMTLibQuery" -> DzStringDz {reject}
+    "return" -> DzStringDz {reject}
     "#ENOENT" -> DzStringDz {reject}
+    "#rebind2" -> DzStringDz {reject}
     "#rebind1" -> DzStringDz {reject}
     "<=" -> DzStringDz {reject}
     "List2KLabel" -> DzStringDz {reject}
@@ -886,12 +1311,13 @@ lexical syntax
     "%Int" -> DzStringDz {reject}
     "+Float" -> DzStringDz {reject}
     "==Float" -> DzStringDz {reject}
+    "#lstat" -> DzStringDz {reject}
     "countAllOccurences" -> DzStringDz {reject}
     "==" -> DzStringDz {reject}
     "KLabel2KLabel" -> DzStringDz {reject}
-    "read" -> DzStringDz {reject}
     "#freshSym" -> DzStringDz {reject}
     "Int2String" -> DzStringDz {reject}
+    ".MyList" -> DzStringDz {reject}
     "#substituteFV" -> DzStringDz {reject}
     "=K" -> DzStringDz {reject}
     "Consts2SMTLib" -> DzStringDz {reject}
@@ -902,8 +1328,9 @@ lexical syntax
     "=/=Set" -> DzStringDz {reject}
     "Set2KLabel" -> DzStringDz {reject}
     ">=" -> DzStringDz {reject}
-    "heat" -> DzStringDz {reject}
     "#else" -> DzStringDz {reject}
+    "heat" -> DzStringDz {reject}
+    "MyMapOf" -> DzStringDz {reject}
     "=Map" -> DzStringDz {reject}
     "<=Int" -> DzStringDz {reject}
     "String2Char" -> DzStringDz {reject}
@@ -919,333 +1346,54 @@ lexical syntax
     "=/=KLabel" -> DzStringDz {reject}
     "=/=Int" -> DzStringDz {reject}
     "+Int" -> DzStringDz {reject}
-    "findChar" -> DzStringDz {reject}
     "--Float" -> DzStringDz {reject}
+    "findChar" -> DzStringDz {reject}
+    "-MySet" -> DzStringDz {reject}
     "and" -> DzStringDz {reject}
     "==Set" -> DzStringDz {reject}
+    ".MyBag" -> DzStringDz {reject}
     "#substituteList1" -> DzStringDz {reject}
     "#tcpRequest" -> DzStringDz {reject}
     "Id2String" -> DzStringDz {reject}
     "or" -> DzStringDz {reject}
     "#substitute" -> DzStringDz {reject}
     "#token" -> DzStringDz {reject}
+    "#write" -> DzStringDz {reject}
     "rtrim" -> DzStringDz {reject}
     "|Int" -> DzStringDz {reject}
     "*Float" -> DzStringDz {reject}
     "inKList" -> DzStringDz {reject}
-    "int" -> DzStringDz {reject}
     "<Float" -> DzStringDz {reject}
     "andBool" -> DzStringDz {reject}
     "spawn" -> DzStringDz {reject}
+    "#putc" -> DzStringDz {reject}
     "isVariable" -> DzStringDz {reject}
     "&Int" -> DzStringDz {reject}
     "#binderSplit" -> DzStringDz {reject}
     "#freshVar1" -> DzStringDz {reject}
     "#substituteKArrow" -> DzStringDz {reject}
-    "directionalityChar" -> IdDz {reject}
-    "%Float" -> IdDz {reject}
-    "#getVarsFromK" -> IdDz {reject}
-    "<Int" -> IdDz {reject}
-    ">String" -> IdDz {reject}
-    "trim" -> IdDz {reject}
-    "categoryChar" -> IdDz {reject}
-    "isSymbolicSet" -> IdDz {reject}
-    "#evalHelper" -> IdDz {reject}
-    "isBinder" -> IdDz {reject}
-    "#substituteBinder" -> IdDz {reject}
-    "#binderSplit1" -> IdDz {reject}
-    "vars" -> IdDz {reject}
-    "#binderSplit2" -> IdDz {reject}
-    "#freeVars1" -> IdDz {reject}
-    "!" -> IdDz {reject}
-    "#" -> IdDz {reject}
-    "checkSat" -> IdDz {reject}
-    "%" -> IdDz {reject}
-    "#fi" -> IdDz {reject}
-    "(" -> IdDz {reject}
-    ")" -> IdDz {reject}
-    "ordChar" -> IdDz {reject}
-    "*" -> IdDz {reject}
-    "+" -> IdDz {reject}
-    "," -> IdDz {reject}
-    "-" -> IdDz {reject}
-    "." -> IdDz {reject}
-    "Int2Float" -> IdDz {reject}
-    "/" -> IdDz {reject}
-    "#inKList" -> IdDz {reject}
-    "getKLabel" -> IdDz {reject}
-    ">=Int" -> IdDz {reject}
-    "=/=KList" -> IdDz {reject}
-    "semaphore" -> IdDz {reject}
-    ">=Float" -> IdDz {reject}
-    ";" -> IdDz {reject}
-    "<" -> IdDz {reject}
-    "!=" -> IdDz {reject}
-    "isLocalFreshVar" -> IdDz {reject}
-    "=" -> IdDz {reject}
-    ">" -> IdDz {reject}
-    "#symEqualitySort" -> IdDz {reject}
-    "getVariables" -> IdDz {reject}
-    "#freshVar" -> IdDz {reject}
-    "#tcpError" -> IdDz {reject}
-    "#map" -> IdDz {reject}
-    "replaceFirst" -> IdDz {reject}
-    "<=Set" -> IdDz {reject}
-    "isBounding" -> IdDz {reject}
-    "KLabel2String" -> IdDz {reject}
-    "#getVars" -> IdDz {reject}
-    "#getVars1" -> IdDz {reject}
-    "[" -> IdDz {reject}
-    "]" -> IdDz {reject}
-    "xorBool" -> IdDz {reject}
-    "#substitutePlainList" -> IdDz {reject}
-    "maxInt" -> IdDz {reject}
-    "forall" -> IdDz {reject}
-    "undef" -> IdDz {reject}
-    "=Int" -> IdDz {reject}
-    "==String" -> IdDz {reject}
-    "#freeVars" -> IdDz {reject}
-    "SMTCall" -> IdDz {reject}
-    "#freshSubst1" -> IdDz {reject}
-    "#noparse" -> IdDz {reject}
-    "#boundVars1" -> IdDz {reject}
-    "#patternMatch1" -> IdDz {reject}
-    "{" -> IdDz {reject}
-    "}" -> IdDz {reject}
-    "isKResult" -> IdDz {reject}
-    "#if" -> IdDz {reject}
-    "xorInt" -> IdDz {reject}
-    "notBool" -> IdDz {reject}
-    "Map2KLabel" -> IdDz {reject}
-    "#freeVarsBinder" -> IdDz {reject}
-    "-Int" -> IdDz {reject}
-    "=Bag" -> IdDz {reject}
-    "#freshSymSort" -> IdDz {reject}
-    "lengthString" -> IdDz {reject}
-    "#counter" -> IdDz {reject}
-    "##tcpRequest" -> IdDz {reject}
-    "^Int" -> IdDz {reject}
-    "#freeVarsBinder1" -> IdDz {reject}
-    "#freeVarsBinder2" -> IdDz {reject}
-    "#substituteBinder1" -> IdDz {reject}
-    "#substituteBinder2" -> IdDz {reject}
-    "#substMap" -> IdDz {reject}
-    "#isTCPError" -> IdDz {reject}
-    "#EISDIR" -> IdDz {reject}
-    "unlock" -> IdDz {reject}
-    "#isMapInK" -> IdDz {reject}
-    "ltrim" -> IdDz {reject}
-    "=/=List" -> IdDz {reject}
-    "#patternMatch" -> IdDz {reject}
-    "~Int" -> IdDz {reject}
-    "==K" -> IdDz {reject}
-    "isBuiltin" -> IdDz {reject}
-    "#ENOTDIR" -> IdDz {reject}
-    "#freshSymSortN" -> IdDz {reject}
-    "#changeLabel" -> IdDz {reject}
-    "=/=Map" -> IdDz {reject}
-    "orBool" -> IdDz {reject}
-    "isSymbolicBag" -> IdDz {reject}
-    "$hasMapping" -> IdDz {reject}
-    "#isDigit" -> IdDz {reject}
-    ">Int" -> IdDz {reject}
-    "replaceAll" -> IdDz {reject}
-    "#ESPIPE" -> IdDz {reject}
-    "==KList" -> IdDz {reject}
-    "==KLabel" -> IdDz {reject}
-    "=KLabel" -> IdDz {reject}
-    "Set2KTerm" -> IdDz {reject}
-    "rfindChar" -> IdDz {reject}
-    "#isWhiteSpace" -> IdDz {reject}
-    "=/=K" -> IdDz {reject}
-    "intersectSet" -> IdDz {reject}
-    "-Set" -> IdDz {reject}
-    "#tokenToString" -> IdDz {reject}
-    "#then" -> IdDz {reject}
-    "#splitedBinder" -> IdDz {reject}
-    "==Map" -> IdDz {reject}
-    "#substituteK" -> IdDz {reject}
-    "false" -> IdDz {reject}
-    "^Float" -> IdDz {reject}
-    "String2Int" -> IdDz {reject}
-    "#freshSubst" -> IdDz {reject}
-    "print" -> IdDz {reject}
-    "#freezer" -> IdDz {reject}
-    "isBound" -> IdDz {reject}
-    "Bag2KLabel" -> IdDz {reject}
-    "-Float" -> IdDz {reject}
-    "#distinctCounter" -> IdDz {reject}
-    "=Set" -> IdDz {reject}
-    "+String" -> IdDz {reject}
-    "#substitutePlainList1" -> IdDz {reject}
-    "fresh" -> IdDz {reject}
-    "=/=Bool" -> IdDz {reject}
-    "getMatching" -> IdDz {reject}
-    "K2SMTLib" -> IdDz {reject}
-    "=List" -> IdDz {reject}
-    "#checkTCPAnswer" -> IdDz {reject}
-    "rfindString" -> IdDz {reject}
-    "#substitutePlain" -> IdDz {reject}
-    "#inSet" -> IdDz {reject}
-    "freshVariables" -> IdDz {reject}
-    "Float2Int" -> IdDz {reject}
-    "dummy" -> IdDz {reject}
-    "isSymbolicMap" -> IdDz {reject}
-    "Set2KTermAcc" -> IdDz {reject}
-    "#retrieveTCPError" -> IdDz {reject}
-    "findString" -> IdDz {reject}
-    "dividesInt" -> IdDz {reject}
-    "else" -> IdDz {reject}
-    "lock" -> IdDz {reject}
-    "#EINVAL" -> IdDz {reject}
-    "if" -> IdDz {reject}
-    "=/=Float" -> IdDz {reject}
-    "#eval" -> IdDz {reject}
-    "isSet" -> IdDz {reject}
-    "in" -> IdDz {reject}
-    "<<Int" -> IdDz {reject}
-    "#EBADF" -> IdDz {reject}
-    "Float2String" -> IdDz {reject}
-    "decomposeMatching" -> IdDz {reject}
-    "|->" -> IdDz {reject}
-    "isKLabelConstant" -> IdDz {reject}
-    "isMatching" -> IdDz {reject}
-    "/Float" -> IdDz {reject}
-    "<=String" -> IdDz {reject}
-    ">=String" -> IdDz {reject}
-    "CellLabel2KLabel" -> IdDz {reject}
-    "=KList" -> IdDz {reject}
-    "String2Id" -> IdDz {reject}
-    "#getMapFromK" -> IdDz {reject}
-    "==Bool" -> IdDz {reject}
-    "isSymbolicList" -> IdDz {reject}
-    "divInt" -> IdDz {reject}
-    "absInt" -> IdDz {reject}
-    "Map" -> IdDz {reject}
-    "#ENAMETOOLONG" -> IdDz {reject}
-    "<=Float" -> IdDz {reject}
-    "chrChar" -> IdDz {reject}
-    "randomRandom" -> IdDz {reject}
-    "wrap-with" -> IdDz {reject}
-    "#set" -> IdDz {reject}
-    "isEmptySet" -> IdDz {reject}
-    "/Int" -> IdDz {reject}
-    "==Int" -> IdDz {reject}
-    "KList2KLabel" -> IdDz {reject}
-    "#parseToken" -> IdDz {reject}
-    "<String" -> IdDz {reject}
-    "=/=String" -> IdDz {reject}
-    "#hasMapping" -> IdDz {reject}
-    "K2Sort" -> IdDz {reject}
-    "#EACCES" -> IdDz {reject}
-    "cool" -> IdDz {reject}
-    "freeVariables" -> IdDz {reject}
-    ">Float" -> IdDz {reject}
-    "#rebind" -> IdDz {reject}
-    "#boundVars" -> IdDz {reject}
-    "*Int" -> IdDz {reject}
-    "redex" -> IdDz {reject}
-    "<=Map" -> IdDz {reject}
-    "String2Float" -> IdDz {reject}
-    "exists" -> IdDz {reject}
-    "#freshSymN" -> IdDz {reject}
-    "impliesBool" -> IdDz {reject}
-    "SMTLibQuery" -> IdDz {reject}
-    "andThenBool" -> IdDz {reject}
-    "#rebind2" -> IdDz {reject}
-    "#ENOENT" -> IdDz {reject}
-    "#rebind1" -> IdDz {reject}
-    "<=" -> IdDz {reject}
-    "List2KLabel" -> IdDz {reject}
-    ">>Int" -> IdDz {reject}
-    "replace" -> IdDz {reject}
-    "lengthList" -> IdDz {reject}
-    "String2KLabel" -> IdDz {reject}
-    "while" -> IdDz {reject}
-    "#ELOOP" -> IdDz {reject}
-    "isToken" -> IdDz {reject}
-    "inVars" -> IdDz {reject}
-    "substrString" -> IdDz {reject}
-    "Vars2SMTLib" -> IdDz {reject}
-    "#getSymLabel" -> IdDz {reject}
-    "%Int" -> IdDz {reject}
-    "+Float" -> IdDz {reject}
-    "==Float" -> IdDz {reject}
-    "countAllOccurences" -> IdDz {reject}
-    "==" -> IdDz {reject}
-    "KLabel2KLabel" -> IdDz {reject}
-    "read" -> IdDz {reject}
-    "#freshSym" -> IdDz {reject}
-    "Int2String" -> IdDz {reject}
-    "#substituteFV" -> IdDz {reject}
-    "=K" -> IdDz {reject}
-    "Consts2SMTLib" -> IdDz {reject}
-    "true" -> IdDz {reject}
-    "heated" -> IdDz {reject}
-    "Char2String" -> IdDz {reject}
-    "#substituteList" -> IdDz {reject}
-    "=/=Set" -> IdDz {reject}
-    "Set2KLabel" -> IdDz {reject}
-    ">=" -> IdDz {reject}
-    "heat" -> IdDz {reject}
-    "#else" -> IdDz {reject}
-    "=Map" -> IdDz {reject}
-    "<=Int" -> IdDz {reject}
-    "String2Char" -> IdDz {reject}
-    "modInt" -> IdDz {reject}
-    "minInt" -> IdDz {reject}
-    "keys" -> IdDz {reject}
-    "values" -> IdDz {reject}
-    "orElseBool" -> IdDz {reject}
-    "==List" -> IdDz {reject}
-    "#EOF" -> IdDz {reject}
-    "#freeVarsSet" -> IdDz {reject}
-    "'#andBool" -> IdDz {reject}
-    "=/=KLabel" -> IdDz {reject}
-    "=/=Int" -> IdDz {reject}
-    "+Int" -> IdDz {reject}
-    "findChar" -> IdDz {reject}
-    "--Float" -> IdDz {reject}
-    "and" -> IdDz {reject}
-    "==Set" -> IdDz {reject}
-    "#substituteList1" -> IdDz {reject}
-    "#tcpRequest" -> IdDz {reject}
-    "Id2String" -> IdDz {reject}
-    "or" -> IdDz {reject}
-    "#substitute" -> IdDz {reject}
-    "#token" -> IdDz {reject}
-    "rtrim" -> IdDz {reject}
-    "|Int" -> IdDz {reject}
-    "*Float" -> IdDz {reject}
-    "inKList" -> IdDz {reject}
-    "int" -> IdDz {reject}
-    "<Float" -> IdDz {reject}
-    "andBool" -> IdDz {reject}
-    "spawn" -> IdDz {reject}
-    "isVariable" -> IdDz {reject}
-    "&Int" -> IdDz {reject}
-    "#binderSplit" -> IdDz {reject}
-    "#freshVar1" -> IdDz {reject}
-    "#substituteKArrow" -> IdDz {reject}
-    "directionalityChar" -> DzIntDz {reject}
+    "#stdin" -> DzIntDz {reject}
     "%Float" -> DzIntDz {reject}
+    "directionalityChar" -> DzIntDz {reject}
     "#getVarsFromK" -> DzIntDz {reject}
+    "#stderr" -> DzIntDz {reject}
     "<Int" -> DzIntDz {reject}
+    "K2String" -> DzIntDz {reject}
     ">String" -> DzIntDz {reject}
     "trim" -> DzIntDz {reject}
     "categoryChar" -> DzIntDz {reject}
     "isSymbolicSet" -> DzIntDz {reject}
     "#evalHelper" -> DzIntDz {reject}
     "isBinder" -> DzIntDz {reject}
-    "#substituteBinder" -> DzIntDz {reject}
     "#binderSplit1" -> DzIntDz {reject}
+    "#substituteBinder" -> DzIntDz {reject}
     "vars" -> DzIntDz {reject}
     "#binderSplit2" -> DzIntDz {reject}
     "#freeVars1" -> DzIntDz {reject}
+    "#read" -> DzIntDz {reject}
     "!" -> DzIntDz {reject}
     "#" -> DzIntDz {reject}
     "checkSat" -> DzIntDz {reject}
-    "%" -> DzIntDz {reject}
     "#fi" -> DzIntDz {reject}
     "(" -> DzIntDz {reject}
     ")" -> DzIntDz {reject}
@@ -1254,10 +1402,11 @@ lexical syntax
     "+" -> DzIntDz {reject}
     "," -> DzIntDz {reject}
     "-" -> DzIntDz {reject}
-    "." -> DzIntDz {reject}
     "Int2Float" -> DzIntDz {reject}
+    "." -> DzIntDz {reject}
     "/" -> DzIntDz {reject}
     "#inKList" -> DzIntDz {reject}
+    "size" -> DzIntDz {reject}
     "getKLabel" -> DzIntDz {reject}
     ">=Int" -> DzIntDz {reject}
     "=/=KList" -> DzIntDz {reject}
@@ -1279,36 +1428,45 @@ lexical syntax
     "isBounding" -> DzIntDz {reject}
     "KLabel2String" -> DzIntDz {reject}
     "#getVars" -> DzIntDz {reject}
+    "Bag2String" -> DzIntDz {reject}
     "#getVars1" -> DzIntDz {reject}
     "[" -> DzIntDz {reject}
     "]" -> DzIntDz {reject}
     "xorBool" -> DzIntDz {reject}
+    "#parse" -> DzIntDz {reject}
+    "#string2klist" -> DzIntDz {reject}
     "#substitutePlainList" -> DzIntDz {reject}
     "maxInt" -> DzIntDz {reject}
     "forall" -> DzIntDz {reject}
+    "#stdout" -> DzIntDz {reject}
     "undef" -> DzIntDz {reject}
+    "#getc" -> DzIntDz {reject}
     "=Int" -> DzIntDz {reject}
     "==String" -> DzIntDz {reject}
     "#freeVars" -> DzIntDz {reject}
     "SMTCall" -> DzIntDz {reject}
     "#freshSubst1" -> DzIntDz {reject}
+    ".MyMap" -> DzIntDz {reject}
     "#noparse" -> DzIntDz {reject}
+    "#tell" -> DzIntDz {reject}
     "#boundVars1" -> DzIntDz {reject}
+    "String2Bool" -> DzIntDz {reject}
     "#patternMatch1" -> DzIntDz {reject}
     "{" -> DzIntDz {reject}
     "}" -> DzIntDz {reject}
-    "isKResult" -> DzIntDz {reject}
     "#if" -> DzIntDz {reject}
+    "isKResult" -> DzIntDz {reject}
     "xorInt" -> DzIntDz {reject}
     "notBool" -> DzIntDz {reject}
     "Map2KLabel" -> DzIntDz {reject}
     "#freeVarsBinder" -> DzIntDz {reject}
-    "-Int" -> DzIntDz {reject}
+    "String2K" -> DzIntDz {reject}
     "=Bag" -> DzIntDz {reject}
+    "-Int" -> DzIntDz {reject}
     "#freshSymSort" -> DzIntDz {reject}
     "lengthString" -> DzIntDz {reject}
-    "#counter" -> DzIntDz {reject}
     "##tcpRequest" -> DzIntDz {reject}
+    "#counter" -> DzIntDz {reject}
     "^Int" -> DzIntDz {reject}
     "#freeVarsBinder1" -> DzIntDz {reject}
     "#freeVarsBinder2" -> DzIntDz {reject}
@@ -1317,15 +1475,18 @@ lexical syntax
     "#substMap" -> DzIntDz {reject}
     "#isTCPError" -> DzIntDz {reject}
     "#EISDIR" -> DzIntDz {reject}
+    "#parseInput" -> DzIntDz {reject}
     "unlock" -> DzIntDz {reject}
     "#isMapInK" -> DzIntDz {reject}
-    "ltrim" -> DzIntDz {reject}
     "=/=List" -> DzIntDz {reject}
+    "ltrim" -> DzIntDz {reject}
     "#patternMatch" -> DzIntDz {reject}
-    "~Int" -> DzIntDz {reject}
+    "#istream" -> DzIntDz {reject}
     "==K" -> DzIntDz {reject}
+    "~Int" -> DzIntDz {reject}
     "isBuiltin" -> DzIntDz {reject}
     "#ENOTDIR" -> DzIntDz {reject}
+    "MySetItem" -> DzIntDz {reject}
     "#freshSymSortN" -> DzIntDz {reject}
     "#changeLabel" -> DzIntDz {reject}
     "=/=Map" -> DzIntDz {reject}
@@ -1333,7 +1494,10 @@ lexical syntax
     "isSymbolicBag" -> DzIntDz {reject}
     "$hasMapping" -> DzIntDz {reject}
     "#isDigit" -> DzIntDz {reject}
+    "MyListItem" -> DzIntDz {reject}
+    "update" -> DzIntDz {reject}
     ">Int" -> DzIntDz {reject}
+    "#open" -> DzIntDz {reject}
     "replaceAll" -> DzIntDz {reject}
     "#ESPIPE" -> DzIntDz {reject}
     "==KList" -> DzIntDz {reject}
@@ -1341,17 +1505,20 @@ lexical syntax
     "=KLabel" -> DzIntDz {reject}
     "Set2KTerm" -> DzIntDz {reject}
     "rfindChar" -> DzIntDz {reject}
+    "#stat" -> DzIntDz {reject}
     "#isWhiteSpace" -> DzIntDz {reject}
+    "String2Bag" -> DzIntDz {reject}
     "=/=K" -> DzIntDz {reject}
     "intersectSet" -> DzIntDz {reject}
     "-Set" -> DzIntDz {reject}
     "#tokenToString" -> DzIntDz {reject}
     "#then" -> DzIntDz {reject}
-    "#splitedBinder" -> DzIntDz {reject}
     "==Map" -> DzIntDz {reject}
+    "#splitedBinder" -> DzIntDz {reject}
     "#substituteK" -> DzIntDz {reject}
     "false" -> DzIntDz {reject}
     "^Float" -> DzIntDz {reject}
+    "#close" -> DzIntDz {reject}
     "String2Int" -> DzIntDz {reject}
     "#freshSubst" -> DzIntDz {reject}
     "print" -> DzIntDz {reject}
@@ -1359,50 +1526,56 @@ lexical syntax
     "isBound" -> DzIntDz {reject}
     "Bag2KLabel" -> DzIntDz {reject}
     "-Float" -> DzIntDz {reject}
-    "#distinctCounter" -> DzIntDz {reject}
     "=Set" -> DzIntDz {reject}
+    "#distinctCounter" -> DzIntDz {reject}
     "+String" -> DzIntDz {reject}
     "#substitutePlainList1" -> DzIntDz {reject}
     "fresh" -> DzIntDz {reject}
     "=/=Bool" -> DzIntDz {reject}
+    "#opendir" -> DzIntDz {reject}
     "getMatching" -> DzIntDz {reject}
-    "K2SMTLib" -> DzIntDz {reject}
     "=List" -> DzIntDz {reject}
+    "K2SMTLib" -> DzIntDz {reject}
     "#checkTCPAnswer" -> DzIntDz {reject}
     "rfindString" -> DzIntDz {reject}
     "#substitutePlain" -> DzIntDz {reject}
     "#inSet" -> DzIntDz {reject}
     "freshVariables" -> DzIntDz {reject}
-    "Float2Int" -> DzIntDz {reject}
     "dummy" -> DzIntDz {reject}
+    "Float2Int" -> DzIntDz {reject}
     "isSymbolicMap" -> DzIntDz {reject}
-    "Set2KTermAcc" -> DzIntDz {reject}
     "#retrieveTCPError" -> DzIntDz {reject}
+    "Set2KTermAcc" -> DzIntDz {reject}
     "findString" -> DzIntDz {reject}
+    "#statTypes" -> DzIntDz {reject}
     "dividesInt" -> DzIntDz {reject}
     "else" -> DzIntDz {reject}
     "lock" -> DzIntDz {reject}
     "#EINVAL" -> DzIntDz {reject}
     "if" -> DzIntDz {reject}
     "=/=Float" -> DzIntDz {reject}
+    "#string2Int" -> DzIntDz {reject}
     "#eval" -> DzIntDz {reject}
     "isSet" -> DzIntDz {reject}
     "in" -> DzIntDz {reject}
     "<<Int" -> DzIntDz {reject}
+    "var" -> DzIntDz {reject}
     "#EBADF" -> DzIntDz {reject}
     "Float2String" -> DzIntDz {reject}
-    "decomposeMatching" -> DzIntDz {reject}
     "|->" -> DzIntDz {reject}
+    "decomposeMatching" -> DzIntDz {reject}
     "isKLabelConstant" -> DzIntDz {reject}
-    "isMatching" -> DzIntDz {reject}
     "/Float" -> DzIntDz {reject}
+    "isMatching" -> DzIntDz {reject}
     "<=String" -> DzIntDz {reject}
     ">=String" -> DzIntDz {reject}
     "CellLabel2KLabel" -> DzIntDz {reject}
     "=KList" -> DzIntDz {reject}
+    "String2DotK" -> DzIntDz {reject}
     "String2Id" -> DzIntDz {reject}
     "#getMapFromK" -> DzIntDz {reject}
     "==Bool" -> DzIntDz {reject}
+    "#seek" -> DzIntDz {reject}
     "isSymbolicList" -> DzIntDz {reject}
     "divInt" -> DzIntDz {reject}
     "absInt" -> DzIntDz {reject}
@@ -1418,27 +1591,35 @@ lexical syntax
     "==Int" -> DzIntDz {reject}
     "KList2KLabel" -> DzIntDz {reject}
     "#parseToken" -> DzIntDz {reject}
+    "#ioError" -> DzIntDz {reject}
     "<String" -> DzIntDz {reject}
+    "#ostream" -> DzIntDz {reject}
     "=/=String" -> DzIntDz {reject}
     "#hasMapping" -> DzIntDz {reject}
-    "K2Sort" -> DzIntDz {reject}
     "#EACCES" -> DzIntDz {reject}
+    "K2Sort" -> DzIntDz {reject}
+    ">Float" -> DzIntDz {reject}
     "cool" -> DzIntDz {reject}
     "freeVariables" -> DzIntDz {reject}
-    ">Float" -> DzIntDz {reject}
+    "#noIO" -> DzIntDz {reject}
     "#rebind" -> DzIntDz {reject}
     "#boundVars" -> DzIntDz {reject}
+    "<=Map" -> DzIntDz {reject}
     "*Int" -> DzIntDz {reject}
     "redex" -> DzIntDz {reject}
-    "<=Map" -> DzIntDz {reject}
+    "<-" -> DzIntDz {reject}
+    "#buffer" -> DzIntDz {reject}
     "String2Float" -> DzIntDz {reject}
     "exists" -> DzIntDz {reject}
     "#freshSymN" -> DzIntDz {reject}
     "impliesBool" -> DzIntDz {reject}
-    "SMTLibQuery" -> DzIntDz {reject}
+    "MyBagItem" -> DzIntDz {reject}
+    ".MySet" -> DzIntDz {reject}
     "andThenBool" -> DzIntDz {reject}
-    "#rebind2" -> DzIntDz {reject}
+    "SMTLibQuery" -> DzIntDz {reject}
+    "return" -> DzIntDz {reject}
     "#ENOENT" -> DzIntDz {reject}
+    "#rebind2" -> DzIntDz {reject}
     "#rebind1" -> DzIntDz {reject}
     "<=" -> DzIntDz {reject}
     "List2KLabel" -> DzIntDz {reject}
@@ -1456,12 +1637,13 @@ lexical syntax
     "%Int" -> DzIntDz {reject}
     "+Float" -> DzIntDz {reject}
     "==Float" -> DzIntDz {reject}
+    "#lstat" -> DzIntDz {reject}
     "countAllOccurences" -> DzIntDz {reject}
     "==" -> DzIntDz {reject}
     "KLabel2KLabel" -> DzIntDz {reject}
-    "read" -> DzIntDz {reject}
     "#freshSym" -> DzIntDz {reject}
     "Int2String" -> DzIntDz {reject}
+    ".MyList" -> DzIntDz {reject}
     "#substituteFV" -> DzIntDz {reject}
     "=K" -> DzIntDz {reject}
     "Consts2SMTLib" -> DzIntDz {reject}
@@ -1472,8 +1654,9 @@ lexical syntax
     "=/=Set" -> DzIntDz {reject}
     "Set2KLabel" -> DzIntDz {reject}
     ">=" -> DzIntDz {reject}
-    "heat" -> DzIntDz {reject}
     "#else" -> DzIntDz {reject}
+    "heat" -> DzIntDz {reject}
+    "MyMapOf" -> DzIntDz {reject}
     "=Map" -> DzIntDz {reject}
     "<=Int" -> DzIntDz {reject}
     "String2Char" -> DzIntDz {reject}
@@ -1489,48 +1672,54 @@ lexical syntax
     "=/=KLabel" -> DzIntDz {reject}
     "=/=Int" -> DzIntDz {reject}
     "+Int" -> DzIntDz {reject}
-    "findChar" -> DzIntDz {reject}
     "--Float" -> DzIntDz {reject}
+    "findChar" -> DzIntDz {reject}
+    "-MySet" -> DzIntDz {reject}
     "and" -> DzIntDz {reject}
     "==Set" -> DzIntDz {reject}
+    ".MyBag" -> DzIntDz {reject}
     "#substituteList1" -> DzIntDz {reject}
     "#tcpRequest" -> DzIntDz {reject}
     "Id2String" -> DzIntDz {reject}
     "or" -> DzIntDz {reject}
     "#substitute" -> DzIntDz {reject}
     "#token" -> DzIntDz {reject}
+    "#write" -> DzIntDz {reject}
     "rtrim" -> DzIntDz {reject}
     "|Int" -> DzIntDz {reject}
     "*Float" -> DzIntDz {reject}
     "inKList" -> DzIntDz {reject}
-    "int" -> DzIntDz {reject}
     "<Float" -> DzIntDz {reject}
     "andBool" -> DzIntDz {reject}
     "spawn" -> DzIntDz {reject}
+    "#putc" -> DzIntDz {reject}
     "isVariable" -> DzIntDz {reject}
     "&Int" -> DzIntDz {reject}
     "#binderSplit" -> DzIntDz {reject}
     "#freshVar1" -> DzIntDz {reject}
     "#substituteKArrow" -> DzIntDz {reject}
-    "directionalityChar" -> DzFloatDz {reject}
+    "#stdin" -> DzFloatDz {reject}
     "%Float" -> DzFloatDz {reject}
+    "directionalityChar" -> DzFloatDz {reject}
     "#getVarsFromK" -> DzFloatDz {reject}
+    "#stderr" -> DzFloatDz {reject}
     "<Int" -> DzFloatDz {reject}
+    "K2String" -> DzFloatDz {reject}
     ">String" -> DzFloatDz {reject}
     "trim" -> DzFloatDz {reject}
     "categoryChar" -> DzFloatDz {reject}
     "isSymbolicSet" -> DzFloatDz {reject}
     "#evalHelper" -> DzFloatDz {reject}
     "isBinder" -> DzFloatDz {reject}
-    "#substituteBinder" -> DzFloatDz {reject}
     "#binderSplit1" -> DzFloatDz {reject}
+    "#substituteBinder" -> DzFloatDz {reject}
     "vars" -> DzFloatDz {reject}
     "#binderSplit2" -> DzFloatDz {reject}
     "#freeVars1" -> DzFloatDz {reject}
+    "#read" -> DzFloatDz {reject}
     "!" -> DzFloatDz {reject}
     "#" -> DzFloatDz {reject}
     "checkSat" -> DzFloatDz {reject}
-    "%" -> DzFloatDz {reject}
     "#fi" -> DzFloatDz {reject}
     "(" -> DzFloatDz {reject}
     ")" -> DzFloatDz {reject}
@@ -1539,10 +1728,11 @@ lexical syntax
     "+" -> DzFloatDz {reject}
     "," -> DzFloatDz {reject}
     "-" -> DzFloatDz {reject}
-    "." -> DzFloatDz {reject}
     "Int2Float" -> DzFloatDz {reject}
+    "." -> DzFloatDz {reject}
     "/" -> DzFloatDz {reject}
     "#inKList" -> DzFloatDz {reject}
+    "size" -> DzFloatDz {reject}
     "getKLabel" -> DzFloatDz {reject}
     ">=Int" -> DzFloatDz {reject}
     "=/=KList" -> DzFloatDz {reject}
@@ -1564,36 +1754,45 @@ lexical syntax
     "isBounding" -> DzFloatDz {reject}
     "KLabel2String" -> DzFloatDz {reject}
     "#getVars" -> DzFloatDz {reject}
+    "Bag2String" -> DzFloatDz {reject}
     "#getVars1" -> DzFloatDz {reject}
     "[" -> DzFloatDz {reject}
     "]" -> DzFloatDz {reject}
     "xorBool" -> DzFloatDz {reject}
+    "#parse" -> DzFloatDz {reject}
+    "#string2klist" -> DzFloatDz {reject}
     "#substitutePlainList" -> DzFloatDz {reject}
     "maxInt" -> DzFloatDz {reject}
     "forall" -> DzFloatDz {reject}
+    "#stdout" -> DzFloatDz {reject}
     "undef" -> DzFloatDz {reject}
+    "#getc" -> DzFloatDz {reject}
     "=Int" -> DzFloatDz {reject}
     "==String" -> DzFloatDz {reject}
     "#freeVars" -> DzFloatDz {reject}
     "SMTCall" -> DzFloatDz {reject}
     "#freshSubst1" -> DzFloatDz {reject}
+    ".MyMap" -> DzFloatDz {reject}
     "#noparse" -> DzFloatDz {reject}
+    "#tell" -> DzFloatDz {reject}
     "#boundVars1" -> DzFloatDz {reject}
+    "String2Bool" -> DzFloatDz {reject}
     "#patternMatch1" -> DzFloatDz {reject}
     "{" -> DzFloatDz {reject}
     "}" -> DzFloatDz {reject}
-    "isKResult" -> DzFloatDz {reject}
     "#if" -> DzFloatDz {reject}
+    "isKResult" -> DzFloatDz {reject}
     "xorInt" -> DzFloatDz {reject}
     "notBool" -> DzFloatDz {reject}
     "Map2KLabel" -> DzFloatDz {reject}
     "#freeVarsBinder" -> DzFloatDz {reject}
-    "-Int" -> DzFloatDz {reject}
+    "String2K" -> DzFloatDz {reject}
     "=Bag" -> DzFloatDz {reject}
+    "-Int" -> DzFloatDz {reject}
     "#freshSymSort" -> DzFloatDz {reject}
     "lengthString" -> DzFloatDz {reject}
-    "#counter" -> DzFloatDz {reject}
     "##tcpRequest" -> DzFloatDz {reject}
+    "#counter" -> DzFloatDz {reject}
     "^Int" -> DzFloatDz {reject}
     "#freeVarsBinder1" -> DzFloatDz {reject}
     "#freeVarsBinder2" -> DzFloatDz {reject}
@@ -1602,15 +1801,18 @@ lexical syntax
     "#substMap" -> DzFloatDz {reject}
     "#isTCPError" -> DzFloatDz {reject}
     "#EISDIR" -> DzFloatDz {reject}
+    "#parseInput" -> DzFloatDz {reject}
     "unlock" -> DzFloatDz {reject}
     "#isMapInK" -> DzFloatDz {reject}
-    "ltrim" -> DzFloatDz {reject}
     "=/=List" -> DzFloatDz {reject}
+    "ltrim" -> DzFloatDz {reject}
     "#patternMatch" -> DzFloatDz {reject}
-    "~Int" -> DzFloatDz {reject}
+    "#istream" -> DzFloatDz {reject}
     "==K" -> DzFloatDz {reject}
+    "~Int" -> DzFloatDz {reject}
     "isBuiltin" -> DzFloatDz {reject}
     "#ENOTDIR" -> DzFloatDz {reject}
+    "MySetItem" -> DzFloatDz {reject}
     "#freshSymSortN" -> DzFloatDz {reject}
     "#changeLabel" -> DzFloatDz {reject}
     "=/=Map" -> DzFloatDz {reject}
@@ -1618,7 +1820,10 @@ lexical syntax
     "isSymbolicBag" -> DzFloatDz {reject}
     "$hasMapping" -> DzFloatDz {reject}
     "#isDigit" -> DzFloatDz {reject}
+    "MyListItem" -> DzFloatDz {reject}
+    "update" -> DzFloatDz {reject}
     ">Int" -> DzFloatDz {reject}
+    "#open" -> DzFloatDz {reject}
     "replaceAll" -> DzFloatDz {reject}
     "#ESPIPE" -> DzFloatDz {reject}
     "==KList" -> DzFloatDz {reject}
@@ -1626,17 +1831,20 @@ lexical syntax
     "=KLabel" -> DzFloatDz {reject}
     "Set2KTerm" -> DzFloatDz {reject}
     "rfindChar" -> DzFloatDz {reject}
+    "#stat" -> DzFloatDz {reject}
     "#isWhiteSpace" -> DzFloatDz {reject}
+    "String2Bag" -> DzFloatDz {reject}
     "=/=K" -> DzFloatDz {reject}
     "intersectSet" -> DzFloatDz {reject}
     "-Set" -> DzFloatDz {reject}
     "#tokenToString" -> DzFloatDz {reject}
     "#then" -> DzFloatDz {reject}
-    "#splitedBinder" -> DzFloatDz {reject}
     "==Map" -> DzFloatDz {reject}
+    "#splitedBinder" -> DzFloatDz {reject}
     "#substituteK" -> DzFloatDz {reject}
     "false" -> DzFloatDz {reject}
     "^Float" -> DzFloatDz {reject}
+    "#close" -> DzFloatDz {reject}
     "String2Int" -> DzFloatDz {reject}
     "#freshSubst" -> DzFloatDz {reject}
     "print" -> DzFloatDz {reject}
@@ -1644,50 +1852,56 @@ lexical syntax
     "isBound" -> DzFloatDz {reject}
     "Bag2KLabel" -> DzFloatDz {reject}
     "-Float" -> DzFloatDz {reject}
-    "#distinctCounter" -> DzFloatDz {reject}
     "=Set" -> DzFloatDz {reject}
+    "#distinctCounter" -> DzFloatDz {reject}
     "+String" -> DzFloatDz {reject}
     "#substitutePlainList1" -> DzFloatDz {reject}
     "fresh" -> DzFloatDz {reject}
     "=/=Bool" -> DzFloatDz {reject}
+    "#opendir" -> DzFloatDz {reject}
     "getMatching" -> DzFloatDz {reject}
-    "K2SMTLib" -> DzFloatDz {reject}
     "=List" -> DzFloatDz {reject}
+    "K2SMTLib" -> DzFloatDz {reject}
     "#checkTCPAnswer" -> DzFloatDz {reject}
     "rfindString" -> DzFloatDz {reject}
     "#substitutePlain" -> DzFloatDz {reject}
     "#inSet" -> DzFloatDz {reject}
     "freshVariables" -> DzFloatDz {reject}
-    "Float2Int" -> DzFloatDz {reject}
     "dummy" -> DzFloatDz {reject}
+    "Float2Int" -> DzFloatDz {reject}
     "isSymbolicMap" -> DzFloatDz {reject}
-    "Set2KTermAcc" -> DzFloatDz {reject}
     "#retrieveTCPError" -> DzFloatDz {reject}
+    "Set2KTermAcc" -> DzFloatDz {reject}
     "findString" -> DzFloatDz {reject}
+    "#statTypes" -> DzFloatDz {reject}
     "dividesInt" -> DzFloatDz {reject}
     "else" -> DzFloatDz {reject}
     "lock" -> DzFloatDz {reject}
     "#EINVAL" -> DzFloatDz {reject}
     "if" -> DzFloatDz {reject}
     "=/=Float" -> DzFloatDz {reject}
+    "#string2Int" -> DzFloatDz {reject}
     "#eval" -> DzFloatDz {reject}
     "isSet" -> DzFloatDz {reject}
     "in" -> DzFloatDz {reject}
     "<<Int" -> DzFloatDz {reject}
+    "var" -> DzFloatDz {reject}
     "#EBADF" -> DzFloatDz {reject}
     "Float2String" -> DzFloatDz {reject}
-    "decomposeMatching" -> DzFloatDz {reject}
     "|->" -> DzFloatDz {reject}
+    "decomposeMatching" -> DzFloatDz {reject}
     "isKLabelConstant" -> DzFloatDz {reject}
-    "isMatching" -> DzFloatDz {reject}
     "/Float" -> DzFloatDz {reject}
+    "isMatching" -> DzFloatDz {reject}
     "<=String" -> DzFloatDz {reject}
     ">=String" -> DzFloatDz {reject}
     "CellLabel2KLabel" -> DzFloatDz {reject}
     "=KList" -> DzFloatDz {reject}
+    "String2DotK" -> DzFloatDz {reject}
     "String2Id" -> DzFloatDz {reject}
     "#getMapFromK" -> DzFloatDz {reject}
     "==Bool" -> DzFloatDz {reject}
+    "#seek" -> DzFloatDz {reject}
     "isSymbolicList" -> DzFloatDz {reject}
     "divInt" -> DzFloatDz {reject}
     "absInt" -> DzFloatDz {reject}
@@ -1703,27 +1917,35 @@ lexical syntax
     "==Int" -> DzFloatDz {reject}
     "KList2KLabel" -> DzFloatDz {reject}
     "#parseToken" -> DzFloatDz {reject}
+    "#ioError" -> DzFloatDz {reject}
     "<String" -> DzFloatDz {reject}
+    "#ostream" -> DzFloatDz {reject}
     "=/=String" -> DzFloatDz {reject}
     "#hasMapping" -> DzFloatDz {reject}
-    "K2Sort" -> DzFloatDz {reject}
     "#EACCES" -> DzFloatDz {reject}
+    "K2Sort" -> DzFloatDz {reject}
+    ">Float" -> DzFloatDz {reject}
     "cool" -> DzFloatDz {reject}
     "freeVariables" -> DzFloatDz {reject}
-    ">Float" -> DzFloatDz {reject}
+    "#noIO" -> DzFloatDz {reject}
     "#rebind" -> DzFloatDz {reject}
     "#boundVars" -> DzFloatDz {reject}
+    "<=Map" -> DzFloatDz {reject}
     "*Int" -> DzFloatDz {reject}
     "redex" -> DzFloatDz {reject}
-    "<=Map" -> DzFloatDz {reject}
+    "<-" -> DzFloatDz {reject}
+    "#buffer" -> DzFloatDz {reject}
     "String2Float" -> DzFloatDz {reject}
     "exists" -> DzFloatDz {reject}
     "#freshSymN" -> DzFloatDz {reject}
     "impliesBool" -> DzFloatDz {reject}
-    "SMTLibQuery" -> DzFloatDz {reject}
+    "MyBagItem" -> DzFloatDz {reject}
+    ".MySet" -> DzFloatDz {reject}
     "andThenBool" -> DzFloatDz {reject}
-    "#rebind2" -> DzFloatDz {reject}
+    "SMTLibQuery" -> DzFloatDz {reject}
+    "return" -> DzFloatDz {reject}
     "#ENOENT" -> DzFloatDz {reject}
+    "#rebind2" -> DzFloatDz {reject}
     "#rebind1" -> DzFloatDz {reject}
     "<=" -> DzFloatDz {reject}
     "List2KLabel" -> DzFloatDz {reject}
@@ -1741,12 +1963,13 @@ lexical syntax
     "%Int" -> DzFloatDz {reject}
     "+Float" -> DzFloatDz {reject}
     "==Float" -> DzFloatDz {reject}
+    "#lstat" -> DzFloatDz {reject}
     "countAllOccurences" -> DzFloatDz {reject}
     "==" -> DzFloatDz {reject}
     "KLabel2KLabel" -> DzFloatDz {reject}
-    "read" -> DzFloatDz {reject}
     "#freshSym" -> DzFloatDz {reject}
     "Int2String" -> DzFloatDz {reject}
+    ".MyList" -> DzFloatDz {reject}
     "#substituteFV" -> DzFloatDz {reject}
     "=K" -> DzFloatDz {reject}
     "Consts2SMTLib" -> DzFloatDz {reject}
@@ -1757,8 +1980,9 @@ lexical syntax
     "=/=Set" -> DzFloatDz {reject}
     "Set2KLabel" -> DzFloatDz {reject}
     ">=" -> DzFloatDz {reject}
-    "heat" -> DzFloatDz {reject}
     "#else" -> DzFloatDz {reject}
+    "heat" -> DzFloatDz {reject}
+    "MyMapOf" -> DzFloatDz {reject}
     "=Map" -> DzFloatDz {reject}
     "<=Int" -> DzFloatDz {reject}
     "String2Char" -> DzFloatDz {reject}
@@ -1774,24 +1998,27 @@ lexical syntax
     "=/=KLabel" -> DzFloatDz {reject}
     "=/=Int" -> DzFloatDz {reject}
     "+Int" -> DzFloatDz {reject}
-    "findChar" -> DzFloatDz {reject}
     "--Float" -> DzFloatDz {reject}
+    "findChar" -> DzFloatDz {reject}
+    "-MySet" -> DzFloatDz {reject}
     "and" -> DzFloatDz {reject}
     "==Set" -> DzFloatDz {reject}
+    ".MyBag" -> DzFloatDz {reject}
     "#substituteList1" -> DzFloatDz {reject}
     "#tcpRequest" -> DzFloatDz {reject}
     "Id2String" -> DzFloatDz {reject}
     "or" -> DzFloatDz {reject}
     "#substitute" -> DzFloatDz {reject}
     "#token" -> DzFloatDz {reject}
+    "#write" -> DzFloatDz {reject}
     "rtrim" -> DzFloatDz {reject}
     "|Int" -> DzFloatDz {reject}
     "*Float" -> DzFloatDz {reject}
     "inKList" -> DzFloatDz {reject}
-    "int" -> DzFloatDz {reject}
     "<Float" -> DzFloatDz {reject}
     "andBool" -> DzFloatDz {reject}
     "spawn" -> DzFloatDz {reject}
+    "#putc" -> DzFloatDz {reject}
     "isVariable" -> DzFloatDz {reject}
     "&Int" -> DzFloatDz {reject}
     "#binderSplit" -> DzFloatDz {reject}
@@ -1799,7 +2026,6 @@ lexical syntax
     "#substituteKArrow" -> DzFloatDz {reject}
 context-free syntax
     DzStringDz -> DzString {cons("DzString1Const")}
-    IdDz -> Id {cons("Id1Const")}
     DzIntDz -> DzInt {cons("DzInt1Const")}
     DzFloatDz -> DzFloat {cons("DzFloat1Const")}
 
@@ -1807,4 +2033,3 @@ context-free syntax
 context-free restrictions
     "#" -/- [s].[y].[m]
     DzInt -/- [0-9]
-    Id -/- [A-Za-z0-9\_]

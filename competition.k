@@ -3,55 +3,51 @@
 */
 module COMPETITION-SYN
 	
-	syntax Decl ::= "var" Ids ";" | "semaphore" Ids ";"
+	syntax Decl ::= "int" Ids ";" | "semaphore" Ids ";"
 
-  syntax Exp ::= Int | Bool | Id | String
-               | "(" Exp ")"             [bracket]				    
-               > "-" Exp                 [strict]				
-               | "read" "(" ")"									
-               > left:											
-                 Exp "*" Exp             [strict, left]			
-               | Exp "/" Exp             [strict, left]		
-               | Exp "%" Exp             [strict, left]
-               > left:
-                 Exp "+" Exp             [strict, left]
-               | Exp "-" Exp             [strict, left]
-               > non-assoc:
-                 Exp "<" Exp             [strict, non-assoc]
-               | Exp "<=" Exp            [strict, non-assoc]
-               | Exp ">" Exp             [strict, non-assoc]
-               | Exp ">=" Exp            [strict, non-assoc]
-               | Exp "==" Exp            [strict, non-assoc]
-               | Exp "!=" Exp            [strict, non-assoc]
-               > "not" Exp               [strict]
-               > left:
-                 Exp "and" Exp           [strict(1), left]
-               | Exp "or" Exp            [strict(1), left]
-               > "spawn" Block							
 
+  syntax AExp ::= Int | Id
+                | "-" AExp                [strict]
+                > "read" "(" ")"          
+                | AExp "/" AExp           [strict, left]
+                | AExp "*" AExp           [strict, left]
+                | AExp "%" AExp           [strict, left]
+                > AExp "+" AExp           [strict, left]
+                | AExp "-" AExp           [strict, left]
+                | "(" AExp ")"            [bracket]
+  
+  syntax BExp ::= Bool
+                | AExp "<" AExp           [strict, non-assoc]
+                | AExp "<=" AExp          [strict, non-assoc]
+                | AExp ">" AExp           [strict, non-assoc]
+                | AExp ">=" AExp          [strict, non-assoc]
+                | AExp "==" AExp          [strict, non-assoc]
+                | AExp "!=" AExp          [strict, non-assoc]
+                | "!" BExp                [strict]
+                > BExp "and" BExp         [strict(1), left]
+                | BExp "or" BExp          [strict(1), left]
+
+  syntax Exp ::= AExp | BExp
   syntax Ids  ::= List{Id,","}
-  syntax Exps ::= List{Exp,","}          [strict]  // automatically hybrid now
-  syntax Ints ::= List{Int, ","}
-  syntax Strings ::= List{String, ","}
-
-  syntax Block ::= "{" "}"								
-                | "{" Stmts "}"
 
   syntax Stmt ::= Decl | Block
-                | Exp ";"                                         [strict]
-                | Id "=" Exp ";"             			                [strict(2)]
-                | "if" "(" Exp ")" Block "else" Block             [avoid, strict(1)]
-                | "if" "(" Exp ")" Block
-                | "while" "(" Exp ")" Block
-                | "return" Exp ";"                                [strict]
-                | "print" "(" Exp ")" ";"              	          [strict]
+                | "spawn" Block
+                | Exp ";"                                           [strict]
+                | Id "=" AExp ";"             			                [strict(2)]
+                | "if" "(" BExp ")" Block "else" Block              [avoid, strict(1)]
+                | "if" "(" BExp ")" Block
+                | "while" "(" BExp ")" Block
+                | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
+
+  syntax Block ::= "{" "}"
+                | "{" Stmts "}"
                 
   syntax Stmts ::= Stmt
-                 | Stmts Stmts                                    [right]
+                 | Stmts Stmts                                      [right]
 
-  rule if (E) S => if (E) S else {}                               [macro]
+  rule if (E) S => if (E) S else {}                                 [macro]
 
 endmodule
 
@@ -63,9 +59,7 @@ module COMPETITION
 	imports SUBSTITUTION
 	imports BUILTIN-SYNTAX-HOOKS
 
-  syntax Val ::= Int | Bool | String
-  syntax Vals ::= List{Val,","}
-  syntax Exp ::= Val
+  syntax Val ::= Int | Bool
   syntax KResult ::= Val
 
   configuration <T color="red">
@@ -89,7 +83,7 @@ module COMPETITION
                   <busy> .Map </busy>
                 </T>
 
-  rule  not T:Bool => notBool(T)
+  rule  ! T:Bool => notBool(T)
   rule  true and E => E
   rule  false and _ => false
   rule  true  or _ => true
@@ -106,28 +100,27 @@ module COMPETITION
   rule  I1:Int > I2:Int => I1 >Int I2
   rule  I1:Int >= I2:Int => I1 >=Int I2
 
-  rule  V1:Val == V2:Val => V1 ==K V2
-  rule  V1:Val != V2:Val => V1 =/=K V2
-
+  rule  I1:Int == I2:Int => I1 ==Int I2
+  rule  I1:Int != I2:Int => I1 =/=Int I2
 
   rule  if (true) S else _ => S
   rule  if (false) _ else S => S
 
-  rule  while (E) S => if (E) {S while(E)S}  	   [structural]
+  rule  while (E) S => if (E) { S while(E) S }  	   [structural]
 
   rule 	<k> read() => I ...</k> 
-  		  <in> ListItem(I:Int) => .List ...</in>   [read]
+  		  <in> ListItem(I:Int) => .List ...</in>       [read]
 
-  rule 	<k> print(V:Val) ; => V ;... </k> 
-  		  <out>... .List => ListItem(V) </out> 	   [print]
+  rule 	<k> print(I:Int) ; => I ;... </k> 
+  		  <out>... .List => ListItem(I) </out> 	       [print]
 
-  rule  _:Val; => .K
+  rule  _:Int ; => .K
 
-  rule  <k> lock P:Id; => 0 ; ... </k>
+  rule  <k> lock P:Id ; => .K ... </k>
         <holds> Holds:Set => Holds SetItem(P) </holds>
   		  <busy> ... P |-> (L:Int => L -Int 1) </busy>  when ((L =/=Int 0) andBool notBool(P in Holds))
 
-  rule  <k> unlock P:Id ; => 1 ; ... </k>
+  rule  <k> unlock P:Id ; => .K ... </k>
         <holds> Holds:Set => Holds -Set SetItem(P) </holds>
         <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
 
@@ -140,33 +133,32 @@ module COMPETITION
         <busy>... X |-> I ...</busy>
 
   rule  <thread>...
-          <k> spawn S:Block => T:Int ...</k>
+          <k> spawn S:Block => T:Int ; ...</k>
           <env> Env:Map </env>
        ...</thread>
        (. => <thread>...
                <k> S </k>
-               <env> Env:Map </env>
+               <env> Env </env>
                <id> T </id>
          ... </thread>) when fresh(T:Int)
 
-  rule  <k> var (X:Id,X1:Ids => X1) ; ... </k>
-		    <env> Rho:Map => Rho[L:Int/X] </env>
-	     	<store> Delta:Map => Delta[0 /L] </store> when fresh(L:Int)  [assignment]
+  rule <thread> ... <k> . </k>  ... </thread> => .
 
-  rule  var .Ids ; => .K      [structural]
+  rule  <k> int (X:Id,X1:Ids => X1) ; ... </k>
+		    <env> Rho:Map => Rho[L:Int/X] </env>
+	     	<store> Delta:Map => Delta[0 / L] </store> when fresh(L:Int)  [assignment]
+
+  rule  int .Ids ; => .K      [structural]
 
   rule  <k> semaphore (X:Id,X1:Ids => X1) ; ... </k>
-        <busy> Mutex:Map => Mutex[1/X] </busy>
+        <busy> Mutex:Map => Mutex[1 / X] </busy>
   rule semaphore .Ids ; => .K
 
 	rule  <k> X:Id = I:Int ; => I; ... </k>
 		    <env> ... X |-> N:Int ... </env>
 		    <store> ... N |-> (_ => I) </store> 
 
-	rule  V:Val ; => .K				[structural]
-
   rule  S1:Stmts S2:Stmts => S1 ~> S2  [structural]
-
 
   rule  { S:Stmts } => S
   rule { } => .K 
