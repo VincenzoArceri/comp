@@ -1,0 +1,5 @@
+int x;
+
+x = 0;
+
+await (x != 0) do { x = 0; }

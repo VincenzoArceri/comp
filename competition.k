@@ -26,6 +26,7 @@ module COMPETITION-SYN
                 | "!" BExp                [strict]
                 > BExp "and" BExp         [strict(1), left]
                 | BExp "or" BExp          [strict(1), left]
+                | "(" BExp ")"            [bracket]
 
   syntax Exp ::= AExp | BExp
   syntax Ids  ::= List{Id,","}
@@ -40,6 +41,7 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
+                | "await" BExp "do" Block
 
   syntax Block ::= "{" "}"
                 | "{" Stmts "}"
@@ -162,5 +164,13 @@ module COMPETITION
 
   rule  { S:Stmts } => S
   rule { } => .K 
+
+  rule await B:BExp do { S:Stmts } =>  B ~> await B do { S }
+
+  syntax Stmt ::= "do" Block
+  rule false ~> await B do { S } => await B do { S }
+  rule true ~> await B do { S } => do { S }
+
+  rule do { S } => S [strict(1)]
 
 endmodule
