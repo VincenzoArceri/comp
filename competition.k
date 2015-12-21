@@ -31,9 +31,7 @@ module COMPETITION-SYN
   syntax Exp ::= AExp | BExp
   syntax Ids  ::= List{Id,","}
 
-  //syntax AtomicBlock ::= "do" Stmts "end"      [strict(1)]
-
-  syntax Stmt ::= Decl | Block
+  syntax Stmt ::= Decl | Block 
                 | "spawn" Block
                 | Exp ";"                                           [strict]
                 | Id "=" AExp ";"             			                [strict(2)]
@@ -43,10 +41,10 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
-                | "await" BExp "do" Block 
+                | "await" BExp "do" Block
 
-
-  syntax Block ::= "{" Stmts "}" | "{" "}"
+  syntax Block ::= "{" Stmts "}" | "{" "}" 
+                  
                 
   syntax Stmts ::= Stmt
                  | Stmts Stmts                                      [right]
@@ -85,6 +83,8 @@ module COMPETITION
                   </streams>
 
                   <busy> .Map </busy>
+
+                  <barrier> -1 </barrier>
                 </T>
 
   rule  ! T:Bool => notBool(T)
@@ -150,7 +150,7 @@ module COMPETITION
 
   rule  <k> int (X:Id,X1:Ids => X1) ; ... </k>
 		    <env> Rho:Map => Rho[L:Int/X] </env>
-	     	<store> Delta:Map => Delta[0 / L] </store> when fresh(L:Int)  [assignment]
+	     	<store> Delta:Map => Delta[0 / L] </store> when fresh(L:Int)  
 
   rule  int .Ids ; => .K      [structural]
 
@@ -160,16 +160,19 @@ module COMPETITION
 
 	rule  <k> X:Id = I:Int ; => I; ... </k>
 		    <env> ... X |-> N:Int ... </env>
-		    <store> ... N |-> (_ => I) </store> 
+		    <store> ... N |-> (_ => I) </store> [assignment]
 
   rule  S1:Stmts S2:Stmts => S1 ~> S2  [structural]
 
   rule  { S:Stmts } => S
-  rule { } => .K 
+  rule { } => .K
   
   rule await B:BExp do Bl:Block =>  B ~> await B do Bl
 
-  rule false ~> await B do Bl:Block => await B do Bl:Block
-  rule true ~> await B do Bl:Block => Bl  
+  rule false ~> await B:BExp do Bl:Block => await B do Bl
+
+  rule <k> true ~> await B:BExp do Bl:Block => Bl ... </k>
+        <id> I </id>
+        <barrier> _ => I </barrier>
 
 endmodule

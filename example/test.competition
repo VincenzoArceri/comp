@@ -1,11 +1,10 @@
-var globalCounter;
+int globalCounter;
 globalCounter = 0;
 
 semaphore fillCount;
 setSem(fillCount, 0);
 
 semaphore emptyCount;
-setSem(emptyCount, 50);
  
 execute {
      while (true) {

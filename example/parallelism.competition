@@ -5,21 +5,17 @@ x = read();
 i = 0;
 
 spawn {
-	lock mutex; 
 	x = x * 2; 
-	unlock mutex;
-}
+	}
 
 spawn { 
-	lock mutex;
 	x = x+10; 
-	unlock mutex;
 }
 
-lock mutex;
+
 
 x = 99;
 
-unlock mutex;
+
 
 print(x);
