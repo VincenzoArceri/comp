@@ -17,6 +17,7 @@ module COMPETITION-SYN
                 | "(" AExp ")"            [bracket]
   
   syntax BExp ::= Bool
+                | "randomBool"
                 | AExp "<" AExp           [strict, non-assoc]
                 | AExp "<=" AExp          [strict, non-assoc]
                 | AExp ">" AExp           [strict, non-assoc]
@@ -41,6 +42,8 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
+                | "parallelSpawn" "(" Block "," Block ")" ";"            
+
 
   syntax Block ::= "{" Stmts "}" | "{" "}" 
                   
@@ -89,6 +92,8 @@ module COMPETITION
   rule  false and _ => false
   rule  true  or _ => true
   rule  false or E => E
+  rule randomBool => true   [random]
+  rule randomBool => false  [random]
 
   rule  I1:Int + I2:Int => I1 +Int I2
   rule  I1:Int - I2:Int => I1 -Int I2
@@ -162,5 +167,8 @@ module COMPETITION
   rule  <k> unlock P:Id ; => .K ... </k>
         <holds> Holds:Set => Holds -Set SetItem(P) </holds>
         <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
+
+  rule parallelSpawn ( Bl1:Block , Bl2:Block ) ; => Bl1 [choice]
+  rule parallelSpawn ( Bl1:Block , Bl2:Block ) ; => Bl2 [choice]
 
 endmodule
