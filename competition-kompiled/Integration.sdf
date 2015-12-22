@@ -411,7 +411,7 @@ context-free syntax
     "lengthList" List -> Int {cons("Int1290Syn")}
     KList "=/=KList" KList -> Bool {cons("Bool136Syn")}
     "isBuiltin" "(" InsertDzK ")" -> Bool {cons("Bool1304Syn")}
-    "{" InsertDzStmts "}" -> Block {cons("Block1502Syn")}
+    "{" InsertDzStmts "}" -> Block {cons("Block1500Syn")}
     MySet "," MySet -> MySet {left, cons("MySet1445Syn")}
     Map "[" InsertDzMap "]" -> Map {cons("Map1UpdateMapWithMapSyn")}
     "#isMapInK" "(" InsertDzK ")" -> Bool {cons("Bool1279Syn")}
@@ -453,7 +453,7 @@ context-free syntax
     K "inKList" KList -> Bool {cons("Bool1267Syn")}
     "#substituteKArrow" "(" InsertDzK "," InsertDzMap "," InsertDzK "," InsertDzK ")" -> K {cons("K1357Syn")}
     "#noIO" -> Stream {cons("Stream1434Syn")}
-    "{" "}" -> Block {cons("Block1503Syn")}
+    "{" "}" -> Block {cons("Block1502Syn")}
     "rtrim" "(" InsertDzString ")" -> String {cons("String1227Syn")}
     "isBounding" "(" InsertDzKLabel "," InsertDzInt ")" -> Bool {cons("Bool1330Syn")}
     "#ENOTDIR" -> TCPError {cons("TCPError1249Syn")}
@@ -487,7 +487,7 @@ context-free syntax
     "#getc" "(" InsertDzInt ")" -> KItem {cons("KItem1403Syn")}
     "isMatching" "(" InsertDzKList "," InsertDzKList ")" -> Bool {cons("Bool1305Syn")}
     Ddecl -> Stmt {}
-    Stmts Stmts -> Stmts {right, cons("Stmts1504Syn")}
+    Stmts Stmts -> Stmts {right, cons("Stmts1503Syn")}
     Map "[" InsertDzKList "/" InsertDzKList "]" -> Map {cons("Map1273Syn")}
     "#tcpRequest" "(" InsertDzString ")" -> TCPAnswer {cons("TCPAnswer1258Syn")}
     ".MyList" -> MyList {cons("MyList1466Syn")}
@@ -499,7 +499,6 @@ context-free syntax
     K "inVars" K -> Bool {cons("Bool1333Syn")}
     "#open" "(" InsertDzString "," InsertDzString ")" -> KItem {cons("KItem1400Syn")}
     ".MySet" -> MySet {cons("MySet1446Syn")}
-    "await" InsertDzBExp "do" Block -> Stmt {cons("Stmt1500Syn")}
     List "==List" List -> Bool {cons("Bool139Syn")}
     "getVariables" "(" InsertDzK ")" -> Set {cons("Set1323Syn")}
     ".MyMap" -> MyMap {cons("MyMap1454Syn")}
@@ -1142,7 +1141,6 @@ lexical syntax
     "notBool" -> DzStringDz {reject}
     "Map2KLabel" -> DzStringDz {reject}
     "#freeVarsBinder" -> DzStringDz {reject}
-    "do" -> DzStringDz {reject}
     "String2K" -> DzStringDz {reject}
     "=Bag" -> DzStringDz {reject}
     "-Int" -> DzStringDz {reject}
@@ -1189,7 +1187,6 @@ lexical syntax
     "Set2KTerm" -> DzStringDz {reject}
     "rfindChar" -> DzStringDz {reject}
     "#stat" -> DzStringDz {reject}
-    "await" -> DzStringDz {reject}
     "#isWhiteSpace" -> DzStringDz {reject}
     "String2Bag" -> DzStringDz {reject}
     "=/=K" -> DzStringDz {reject}
@@ -1471,7 +1468,6 @@ lexical syntax
     "notBool" -> DzIntDz {reject}
     "Map2KLabel" -> DzIntDz {reject}
     "#freeVarsBinder" -> DzIntDz {reject}
-    "do" -> DzIntDz {reject}
     "String2K" -> DzIntDz {reject}
     "=Bag" -> DzIntDz {reject}
     "-Int" -> DzIntDz {reject}
@@ -1518,7 +1514,6 @@ lexical syntax
     "Set2KTerm" -> DzIntDz {reject}
     "rfindChar" -> DzIntDz {reject}
     "#stat" -> DzIntDz {reject}
-    "await" -> DzIntDz {reject}
     "#isWhiteSpace" -> DzIntDz {reject}
     "String2Bag" -> DzIntDz {reject}
     "=/=K" -> DzIntDz {reject}
@@ -1800,7 +1795,6 @@ lexical syntax
     "notBool" -> DzFloatDz {reject}
     "Map2KLabel" -> DzFloatDz {reject}
     "#freeVarsBinder" -> DzFloatDz {reject}
-    "do" -> DzFloatDz {reject}
     "String2K" -> DzFloatDz {reject}
     "=Bag" -> DzFloatDz {reject}
     "-Int" -> DzFloatDz {reject}
@@ -1847,7 +1841,6 @@ lexical syntax
     "Set2KTerm" -> DzFloatDz {reject}
     "rfindChar" -> DzFloatDz {reject}
     "#stat" -> DzFloatDz {reject}
-    "await" -> DzFloatDz {reject}
     "#isWhiteSpace" -> DzFloatDz {reject}
     "String2Bag" -> DzFloatDz {reject}
     "=/=K" -> DzFloatDz {reject}

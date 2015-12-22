@@ -41,7 +41,6 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
-                | "await" BExp "do" Block
 
   syntax Block ::= "{" Stmts "}" | "{" "}" 
                   
@@ -83,8 +82,6 @@ module COMPETITION
                   </streams>
 
                   <busy> .Map </busy>
-
-                  <barrier> -1 </barrier>
                 </T>
 
   rule  ! T:Bool => notBool(T)
@@ -116,22 +113,13 @@ module COMPETITION
   		  <in> ListItem(I:Int) => .List ...</in>       [read]
 
   rule 	<k> print(I:Int) ; => I ;... </k> 
-  		  <out>... .List => ListItem(I) </out> 	       [print]
+  		  <out>... .List => ListItem(I) </out>         [print]
 
   rule  _:Int ; => .K
 
-  rule  <k> lock P:Id ; => .K ... </k>
-        <holds> Holds:Set => Holds SetItem(P) </holds>
-  		  <busy> ... P |-> (L:Int => L -Int 1) </busy>  when ((L =/=Int 0) andBool notBool(P in Holds))
-
-  rule  <k> unlock P:Id ; => .K ... </k>
-        <holds> Holds:Set => Holds -Set SetItem(P) </holds>
-        <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
-
-
   rule  <k> X:Id => I:Int ...</k>
         <env>... X |-> L:Int ...</env>
-        <store>... L |-> I:Int ...</store>  [lookup]
+        <store>... L |-> I:Int ...</store>           [lookup]
 
   rule  <k> X:Id => I:Int ...</k>
         <busy>... X |-> I ...</busy>
@@ -152,27 +140,27 @@ module COMPETITION
 		    <env> Rho:Map => Rho[L:Int/X] </env>
 	     	<store> Delta:Map => Delta[0 / L] </store> when fresh(L:Int)  
 
-  rule  int .Ids ; => .K      [structural]
+  rule  int .Ids ; => .K                             [structural]
+
+	rule  <k> X:Id = I:Int ; => I; ... </k>
+		    <env> ... X |-> N:Int ... </env>
+		    <store> ... N |-> (_ => I) </store>          [assignment]
+
+  rule  S1:Stmts S2:Stmts => S1 ~> S2                [structural]
+
+  rule  { S:Stmts } => S
+  rule { } => .K
 
   rule  <k> semaphore (X:Id,X1:Ids => X1) ; ... </k>
         <busy> Mutex:Map => Mutex[1 / X] </busy>
   rule semaphore .Ids ; => .K
 
-	rule  <k> X:Id = I:Int ; => I; ... </k>
-		    <env> ... X |-> N:Int ... </env>
-		    <store> ... N |-> (_ => I) </store> [assignment]
+  rule  <k> lock P:Id ; => .K ... </k>
+        <holds> Holds:Set => Holds SetItem(P) </holds>
+        <busy> ... P |-> (L:Int => L -Int 1) </busy>  when ((L =/=Int 0) andBool notBool(P in Holds))
 
-  rule  S1:Stmts S2:Stmts => S1 ~> S2  [structural]
-
-  rule  { S:Stmts } => S
-  rule { } => .K
-  
-  rule await B:BExp do Bl:Block =>  B ~> await B do Bl
-
-  rule false ~> await B:BExp do Bl:Block => await B do Bl
-
-  rule <k> true ~> await B:BExp do Bl:Block => Bl ... </k>
-        <id> I </id>
-        <barrier> _ => I </barrier>
+  rule  <k> unlock P:Id ; => .K ... </k>
+        <holds> Holds:Set => Holds -Set SetItem(P) </holds>
+        <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
 
 endmodule
