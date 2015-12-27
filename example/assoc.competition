@@ -1,0 +1,9 @@
+int x;
+
+x = read();
+
+if (x > 100) {
+	print(0);
+} else {
+	print(1);
+}

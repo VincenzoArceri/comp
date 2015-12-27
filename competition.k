@@ -22,8 +22,8 @@ module COMPETITION-SYN
                 | AExp "<=" AExp          [strict, non-assoc]
                 | AExp ">" AExp           [strict, non-assoc]
                 | AExp ">=" AExp          [strict, non-assoc]
-                | AExp "==" AExp          [strict, non-assoc]
-                | AExp "!=" AExp          [strict, non-assoc]
+                | AExp "==" AExp          [strict]
+                | AExp "!=" AExp          [strict]
                 | "!" BExp                [strict]
                 > BExp "and" BExp         [strict(1), left]
                 | BExp "or" BExp          [strict(1), left]
@@ -42,7 +42,7 @@ module COMPETITION-SYN
                 | "print" "(" AExp ")" ";"              	          [strict]
                 | "lock" Id ";"                       	          
                 | "unlock" Id ";"
-                | "parallelSpawn" "(" Block "," Block ")" ";"            
+                | "exclusiveSpawn" "(" Block "," Block ")" ";"            
 
 
   syntax Block ::= "{" Stmts "}" | "{" "}" 
@@ -75,8 +75,6 @@ module COMPETITION
                       <id color="pink"> 0 </id>
                     </thread>
                   </threads>
-
-                  <genv color="pink"> .Map </genv>
                   <store color="white"> .Map </store>
                   
                   <streams>
@@ -168,7 +166,7 @@ module COMPETITION
         <holds> Holds:Set => Holds -Set SetItem(P) </holds>
         <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
 
-  rule parallelSpawn ( Bl1:Block , Bl2:Block ) ; => Bl1 [choice]
-  rule parallelSpawn ( Bl1:Block , Bl2:Block ) ; => Bl2 [choice]
+  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => Bl1 [choice]
+  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => Bl2 [choice]
 
 endmodule
