@@ -230,6 +230,7 @@ context-free syntax
     "#ELOOP" -> TCPError {cons("TCPError1252Syn")}
     "#rebind2" "(" InsertDzK "," InsertDzInt "," InsertDzMap "," InsertDzK ")" -> K {cons("K1366Syn")}
     "#isTCPError" "(" InsertDzString ")" -> Bool {cons("Bool1263Syn")}
+    "env" "(" InsertDzMap ")" -> K {cons("K1506Syn")}
     "#freezer" K -> KLabel {cons("KLabel1302Syn")}
     "isEmptySet" "(" InsertDzSet ")" -> Bool {cons("Bool1287Syn")}
     "replaceAll" "(" InsertDzString "," InsertDzString "," InsertDzString ")" -> String {cons("String1220Syn")}
@@ -479,6 +480,7 @@ lexical syntax
     "rfindChar" -> IdDz {reject}
     "intersectSet" -> IdDz {reject}
     "false" -> IdDz {reject}
+    "env" -> IdDz {reject}
     "String2Int" -> IdDz {reject}
     "print" -> IdDz {reject}
     "isBound" -> IdDz {reject}
@@ -789,6 +791,7 @@ lexical syntax
     "#substituteK" -> DzStringDz {reject}
     "false" -> DzStringDz {reject}
     "^Float" -> DzStringDz {reject}
+    "env" -> DzStringDz {reject}
     "String2Int" -> DzStringDz {reject}
     "#freshSubst" -> DzStringDz {reject}
     "print" -> DzStringDz {reject}
@@ -1076,6 +1079,7 @@ lexical syntax
     "#substituteK" -> IdDz {reject}
     "false" -> IdDz {reject}
     "^Float" -> IdDz {reject}
+    "env" -> IdDz {reject}
     "String2Int" -> IdDz {reject}
     "#freshSubst" -> IdDz {reject}
     "print" -> IdDz {reject}
@@ -1363,6 +1367,7 @@ lexical syntax
     "#substituteK" -> DzIntDz {reject}
     "false" -> DzIntDz {reject}
     "^Float" -> DzIntDz {reject}
+    "env" -> DzIntDz {reject}
     "String2Int" -> DzIntDz {reject}
     "#freshSubst" -> DzIntDz {reject}
     "print" -> DzIntDz {reject}
@@ -1650,6 +1655,7 @@ lexical syntax
     "#substituteK" -> DzFloatDz {reject}
     "false" -> DzFloatDz {reject}
     "^Float" -> DzFloatDz {reject}
+    "env" -> DzFloatDz {reject}
     "String2Int" -> DzFloatDz {reject}
     "#freshSubst" -> DzFloatDz {reject}
     "print" -> DzFloatDz {reject}

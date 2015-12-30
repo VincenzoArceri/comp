@@ -1,6 +1,7 @@
-/*
-  Sintassi di Competition
-*/
+/**
+  * To compile kompile --transition "lookup,read,assignment,print,random, choice" competition.k
+  */
+
 module COMPETITION-SYN
 	
 	syntax Decl ::= "int" Ids ";" | "semaphore" Ids ";"
@@ -128,7 +129,7 @@ module COMPETITION
         <busy>... X |-> I ...</busy>
 
   rule  <thread>...
-          <k> spawn S:Block => T:Int ; ...</k>
+          <k> spawn { S:Stmts } => T:Int ; ...</k>
           <env> Env:Map </env>
        ...</thread>
        (. => <thread>...
@@ -137,7 +138,7 @@ module COMPETITION
                <id> T </id>
          ... </thread>) when fresh(T:Int)
 
-  rule <thread> ... <k> . </k>  ... </thread> => .
+  rule <thread> ... <k> .K </k> <id> T </id>  ... </thread> => . when T =/=Int 0
 
   rule  <k> int (X:Id,X1:Ids => X1) ; ... </k>
 		    <env> Rho:Map => Rho[L:Int/X] </env>
@@ -151,8 +152,15 @@ module COMPETITION
 
   rule  S1:Stmts S2:Stmts => S1 ~> S2                [structural]
 
-  rule  { S:Stmts } => S
-  rule { } => .K
+  syntax K ::= env(Map)
+
+  rule { } =>.K
+
+  rule <k> { S:Stmts } => S ~> env(Rho) ... </k>
+       <env> Rho:Map </env>                 [structural]
+
+  rule <k> env(Rho:Map) => . ... </k>
+       <env> _ => Rho </env>
 
   rule  <k> semaphore (X:Id,X1:Ids => X1) ; ... </k>
         <busy> Mutex:Map => Mutex[1 / X] </busy>
@@ -166,7 +174,7 @@ module COMPETITION
         <holds> Holds:Set => Holds -Set SetItem(P) </holds>
         <busy> ... P |-> (L:Int => L:Int +Int 1)... </busy> when ((P in Holds) andBool (L ==Int 0)) 
 
-  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => Bl1 [choice]
-  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => Bl2 [choice]
+  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => spawn Bl1 [choice]
+  rule exclusiveSpawn ( Bl1:Block , Bl2:Block ) ; => spawn Bl2 [choice]
 
 endmodule

@@ -1,0 +1,24 @@
+int x, y, z;
+
+z = 10;
+
+{
+	int z;
+	z = 100;
+	x = 99;
+	print(z);
+}
+
+print(z);
+
+spawn {
+	z = 9999;
+	print(z);
+}
+
+print(z);
+
+exclusiveSpawn(
+	{ x = 100; },
+	{ x = 9999; }
+);
